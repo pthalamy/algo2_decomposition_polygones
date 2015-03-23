@@ -6,3 +6,6 @@
 # Latex
 *.aux
 *.log
+
+# Executables
+test_abr
