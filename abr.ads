@@ -19,4 +19,6 @@ package ABR is
    
    function Recherche (A : in out Arbre; V : in Natural) return Boolean;
    
+   procedure Affichage (A : in out Arbre);
+   
 end ABR;

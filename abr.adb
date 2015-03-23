@@ -81,9 +81,26 @@ package body ABR is
    
    procedure Put (N : Noeud) is
    begin
-      Put_Line (Integer'Image(N.Val) & "(" 
-		  & Integer'Image(N.Fils(Droite).Val) & ", "
-		  & Integer'Image(N.Fils(Gauche).Val) & ")");
+      Put (Integer'Image(N.Val) & " (");
+      
+      -- Affichage du voisinnage 
+      
+      if N.Fils(Gauche) /= null then
+	 Put (Integer'Image(N.Fils(Gauche).Val) & ", ");
+      else
+	 Put ("null, ");
+      end if;
+      
+      if N.Fils(Droite) /= null then
+	 Put (Integer'Image(N.Fils(Droite).Val) & ")");
+      else
+	 Put ("null)");
+      end if;
+      
+      --  Affichage de la profondeur du sous-arbre      
+      Put (" || Depth : " & Integer'Image(N.Compte));
+      
+      New_Line;
    end Put;
    
    procedure Affichage (A : in out Arbre) is
