@@ -1,0 +1,8 @@
+# Temporary files
+**/*~
+**/*.ali
+**/*.o
+
+# Latex
+*.aux
+*.log
