@@ -1,6 +1,16 @@
 
 package body ABR is
    
+   procedure MAJ_Voisinage (Parent : in out Arbre; X : in MAJ) is
+   begin
+      if Parent = null then 
+	 return;
+      else
+	 Parent.Compte := Parent.Compte + Integer(X);
+	 MAJ_Voisinage (Parent.Pere, X);
+      end if;
+   end MAJ_Voisinage;
+   
    procedure Insertion (A : in out Arbre; V : in Natural) is
    begin
       if A = null then
@@ -16,7 +26,8 @@ package body ABR is
 	    A.Fils(Droite) := new Noeud'(Val => V, 
 					Fils => (others => null),
 					Pere => A,
-					Compte => 1);
+					 Compte => 1);
+	    MAJ_Voisinage (A, 1);
 	 else 
 	    Insertion (A.Fils(Droite), V);
 	 end if;
@@ -25,13 +36,15 @@ package body ABR is
 	    A.Fils(Gauche) := new Noeud'(Val => V, 
 					Fils => (others => null),
 					Pere => A,
-					Compte => 1);
+					 Compte => 1);
+	    MAJ_Voisinage (A, 1);
 	 else 
 	    Insertion (A.Fils(Gauche), V);
 	 end if;
-      end if;
+      end if;      
+      
    end Insertion;
-   
+      
    procedure Suppression (A : in out Arbre; V : in Natural) is
       Max : Natural := 0;
       
@@ -43,9 +56,11 @@ package body ABR is
 	    Max := A.Val;
 	 end if;
       end Sup_Max;
+      
    begin
       if A = null then
-	 Put_Line ("Arbre inexistant.");
+	 Put_Line (Standard_Error, "suppression_error: Valeur non présente");
+	 return;
       end if;
       
       if A.Val > V then
@@ -53,12 +68,19 @@ package body ABR is
       elsif A.Val < V then
 	 Suppression (A.Fils(Droite), V);
       else
-	 if A.Fils(Gauche) = null then
+	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
+	    MAJ_Voisinage (A.Pere, -1);
+	 elsif A.Fils(Gauche) = null then
+	    MAJ_Voisinage (A.Pere, -1);
+	    A.Fils(Droite).Pere := A.Pere;
 	    A := A.Fils(Droite);
 	 elsif A.Fils(Droite) = null then
+	    MAJ_Voisinage (A.Pere, -1);
+	    A.Fils(Gauche).Pere := A.Pere;
 	    A := A.Fils(Gauche);
 	 else
-	    Sup_Max (Max, A.Fils(Gauche));
+	    MAJ_Voisinage (A.Pere, -1);
+	    Sup_Max (Max, A.Fils(Droite));
 	    A.Val := Max;
 	 end if;
       end if;      
@@ -119,5 +141,5 @@ package body ABR is
       
       Put (A.all);
    end Affichage;
-   
+
 end ABR;

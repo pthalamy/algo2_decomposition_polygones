@@ -12,6 +12,7 @@ package ABR is
       Pere : Arbre;
       Compte : Positive; -- nombre de noeuds dans le sous−arbre 
    end record;
+   type MAJ is range -1 .. 1;
    
    procedure Insertion (A : in out Arbre; V : in Natural);
    
