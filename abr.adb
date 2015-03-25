@@ -48,12 +48,13 @@ package body ABR is
    procedure Suppression (A : in out Arbre; V : in Natural) is
       Max : Natural := 0;
       
-      procedure Sup_Max (Max : out Natural; A : in Arbre) is
+      procedure Sup_Max (A : in out Arbre; Max : out Natural) is
       begin 
-	 if A.Fils(Droite) /= null then
-	    Sup_Max (Max, A.Fils(Droite));	    
-	 else
+	 if A.Fils(Droite) = null then	    
 	    Max := A.Val;
+	    A := A.Fils(Gauche);
+	 else
+	    Sup_Max (A.Fils(Droite), Max);	    	    
 	 end if;
       end Sup_Max;
       
@@ -79,9 +80,9 @@ package body ABR is
 	    A.Fils(Gauche).Pere := A.Pere;
 	    A := A.Fils(Gauche);
 	 else
-	    MAJ_Voisinage (A.Pere, -1);
-	    Sup_Max (Max, A.Fils(Droite));
+	    Sup_Max (A.Fils(Gauche), Max);
 	    A.Val := Max;
+	    MAJ_Voisinage (A.Pere, -1);		    
 	 end if;
       end if;      
    end Suppression;
