@@ -2,6 +2,7 @@ with Ada.Integer_Text_IO, Ada.Text_IO;
 use Ada.Integer_Text_IO, Ada.Text_IO;
 
 package ABR is
+   
    type Noeud;
    type Arbre is access Noeud;
    type Direction is (Gauche , Droite);
@@ -18,8 +19,18 @@ package ABR is
    
    procedure Suppression (A : in out Arbre; V : in Natural);
    
-   function Recherche (A : in out Arbre; V : in Natural) return Boolean;
+   function Recherche (A : in Arbre; 
+		       V : in Natural;
+		       R : out Arbre) return Boolean;
    
-   procedure Affichage (A : in out Arbre);
+   procedure Affichage (A : in Arbre);
+   
+   procedure Noeuds_Voisins (Cible : in Arbre; 
+			     Petit_Voisin, Grand_Voisin : out Arbre);
+
+   
+   procedure Compte_Position (Cible : in Arbre; 
+			      Nb_Petits, Nb_Grands : out Natural);
+     
    
 end ABR;

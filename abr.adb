@@ -87,18 +87,21 @@ package body ABR is
       end if;      
    end Suppression;
    
-   function Recherche (A : in out Arbre; V : in Natural) return Boolean is
+   function Recherche (A : in Arbre; 
+		       V : in Natural;
+		       R : out Arbre) return Boolean is
    begin
       if A = null then
 	 return False;
       end if;
       
       if A.Val = V then
+	 R := A;
 	 return True;
       elsif A.Val < V then
-	 return Recherche (A.Fils(Droite), V);
+	 return Recherche (A.Fils(Droite), V, R);
       else
-	 return Recherche (A.Fils(Gauche), V);		   
+	 return Recherche (A.Fils(Gauche), V, R);		   
       end if;
    end Recherche;   
    
@@ -126,7 +129,7 @@ package body ABR is
       New_Line;
    end Put;
    
-   procedure Affichage (A : in out Arbre) is
+   procedure Affichage (A : in Arbre) is
    begin
       if A = null then
 	 Put_Line ("Arbre inexistant.");
@@ -142,5 +145,19 @@ package body ABR is
       
       Put (A.all);
    end Affichage;
+   
+   procedure Noeuds_Voisins (Cible : in Arbre; 
+			     Petit_Voisin, Grand_Voisin : out Arbre) is
+      Cour : Arbre := Cible;
+   begin
+      null;
+   end Noeuds_Voisins;
+   
+   procedure Compte_Position (Cible : in Arbre; 
+			      Nb_Petits, Nb_Grands : out Natural) is
+   begin
+      null;
+   end Compte_Position;
 
+   
 end ABR;
