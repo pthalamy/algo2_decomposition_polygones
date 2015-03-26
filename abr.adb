@@ -1,6 +1,8 @@
 
 package body ABR is
    
+   -- Met à jour le compte de tous les noeuds Parents de "Parent", 
+   -- ce dernier y compris, de + X.
    procedure MAJ_Voisinage (Parent : in out Arbre; X : in MAJ) is
    begin
       if Parent = null then 
@@ -11,6 +13,7 @@ package body ABR is
       end if;
    end MAJ_Voisinage;
    
+   -- Insere un noeud de valeur C dans l'arbre dont A est la racine
    procedure Insertion (A : in out Arbre; C : in Type_Clef) is
    begin
       if A = null then
@@ -44,10 +47,13 @@ package body ABR is
       end if;      
       
    end Insertion;
-      
+   
+   -- Supprime un noeud de valeur C dans l'arbre dont A est la racine      
    procedure Suppression (A : in out Arbre; C : in Type_Clef) is
       Max : Type_Clef := 0;
       
+      -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
+      -- dont A est la racine
       procedure Sup_Max (A : in out Arbre; Max : out Type_Clef) is
       begin 
 	 if A.Fils(Droite) = null then	    
@@ -87,11 +93,16 @@ package body ABR is
       end if;      
    end Suppression;
    
+   
+   -- Recherche le noeud de valeur C dans l'arbre dont A est la racine
+   -- Return True si trouvé, false sinon
+   -- Retourne aussi R, pointeur sur le noeud recherché
    function Recherche (A : in Arbre; 
 		       C : in Type_Clef;
 		       R : out Arbre) return Boolean is
    begin
       if A = null then
+	 R := null;
 	 return False;
       end if;
       
@@ -105,6 +116,7 @@ package body ABR is
       end if;
    end Recherche;   
    
+   -- Affiche le noeud N sur Stdout
    procedure Put (N : Noeud) is
    begin
       Put (Integer'Image(Integer(N.C)) & " (");
@@ -129,6 +141,7 @@ package body ABR is
       New_Line;
    end Put;
    
+   -- Affiche l'arbre dont A est la racine sur stdout
    procedure Affichage (A : in Arbre) is
    begin
       if A = null then
