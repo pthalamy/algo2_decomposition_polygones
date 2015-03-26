@@ -24,9 +24,9 @@ package ABR is
    
    procedure Suppression (A : in out Arbre; C : in Type_Clef);
    
-   function Recherche (A : in Arbre; 
+   procedure Recherche (A : in Arbre; 
 		       C : in Type_Clef;
-		       R : out Arbre) return Boolean;
+		       R : out Arbre);
    
    procedure Affichage (A : in Arbre);
    

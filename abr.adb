@@ -115,22 +115,22 @@ package body ABR is
    -- Recherche le noeud de valeur C dans l'arbre dont A est la racine
    -- Return True si trouvé, False sinon
    -- Retourne aussi R, pointeur sur le noeud recherché
-   function Recherche (A : in Arbre; 
+   procedure Recherche (A : in Arbre; 
 		       C : in Type_Clef;
-		       R : out Arbre) return Boolean is
+		       R : out Arbre)  is
    begin
       if A = null then
 	 R := null;
-	 return False;
+	 return ;
       end if;
       
       if A.C = C then
 	 R := A;
-	 return True;
+	 return ;
       elsif A.C < C then
-	 return Recherche (A.Fils(Droite), C, R);
+	 Recherche (A.Fils(Droite), C, R);
       else
-	 return Recherche (A.Fils(Gauche), C, R);		   
+	 Recherche (A.Fils(Gauche), C, R);		   
       end if;
    end Recherche;   
    
@@ -200,7 +200,7 @@ package body ABR is
       Noeud_Courant := Cible.all ;
       -- Pour le nombre de noeuds de clef inférieure
       if (Cible.all.Fils(Gauche) /= null) then -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
-	 Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Cible.all.Fils(Gauche).all.Compte ;
+	 Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
       end if ;      
       
       while (Noeud_Courant.Pere /= null) loop -- On remonte
@@ -214,7 +214,7 @@ package body ABR is
 	    Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + 1 ;
 	    
 	    if (Cible.all.Fils(Gauche) /= null) then
-	       Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Cible.all.Fils(Gauche).all.Compte ;
+	       Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
 	    end if ;
 	 end if ;
       end loop ;
@@ -222,7 +222,7 @@ package body ABR is
       -- Pour le nombre de noeuds de clef superieure
       
       if (Cible.all.Fils(Droite) /= null) then -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
-	 Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Cible.all.Fils(Droite).all.Compte ;
+	 Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Type_Clef(Cible.all.Fils(Droite).all.Compte) ;
       end if ;
       
       while (Noeud_Courant.Pere /= null) loop -- On remonte
@@ -235,7 +235,7 @@ package body ABR is
 	    Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + 1 ;
 	    
 	    if (Cible.all.Fils(Droite) /= null) then
-	       Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Cible.all.Fils(Droite).all.Compte ;
+	       Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Type_Clef(Cible.all.Fils(Droite).all.Compte) ;
 	    end if ;
 	    
 	 end if;
