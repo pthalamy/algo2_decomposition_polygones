@@ -13,8 +13,9 @@ begin
    declare 
       Elements : array(1..Nb_Elt) of Type_Clef;
       A : ABR.Arbre := null;
-      R : Type_Clef;
-      Found : ABR.Arbre;
+      R : ABR.Arbre;
+      ClefAR : Type_Clef;
+      Vinf, VSup : Type_Clef;
    begin
       Put_Line ("Suite d'entiers :");      
       for I in Elements'Range loop
@@ -29,23 +30,33 @@ begin
       ABR.Affichage (A);      
       
       Put_Line ("Nombre à rechercher :");
-      Get (Integer(R));
-
-      if ABR.Recherche (A, R, Found) then 
-	 Put_Line ("Trouvé");
-      else 
-      	 Put_Line ("Introuvable");
-      end if;
+      Get (Integer(ClefAR));
+      Put_Line ("Recherche et compte de voisins de : " 
+		  & Integer'Image(Integer(ClefAR)));
       
-      Put_Line ("Suppression de " & Integer'Image(Integer(R)));
-      ABR.Suppression (A, R);
-      ABR.Affichage (A);
+      ABR.Recherche (A, ClefAR, R);
+      ABR.Compte_Position (R, VInf, VSup);
+      Put_Line ("Nb voisins inf: " & Integer'Image(Integer(VInf)));
+      Put_Line ("Nb voisins sup: " & Integer'Image(Integer(VSup)));
+      
+      --  Put_Line ("Nombre à rechercher :");
+      --  Get (Integer(R));
+
+      --  if ABR.Recherche (A, R, Found) then 
+      --  	 Put_Line ("Trouvé");
+      --  else 
+      --  	 Put_Line ("Introuvable");
+      --  end if;
+      
+      --  Put_Line ("Suppression de " & Integer'Image(Integer(R)));
+      --  ABR.Suppression (A, R);
+      --  ABR.Affichage (A);
 	    
-      if ABR.Recherche (A, R, Found) then 
-	 Put_Line ("Trouvé");
-      else 
-      	 Put_Line ("Introuvable");
-      end if;
+      --  if ABR.Recherche (A, R, Found) then 
+      --  	 Put_Line ("Trouvé");
+      --  else 
+      --  	 Put_Line ("Introuvable");
+      --  end if;
       
    end;      
 end Test_ABR;
