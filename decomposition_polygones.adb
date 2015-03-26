@@ -4,7 +4,7 @@ use Ada.Text_IO, Ada.Float_Text_IO, Ada.Command_Line;
 with Parseur, Defs, ABR, Svg;
 use Defs;
 
-procedure Decomposition_Polynomes is
+procedure Decomposition_Polygones is
    Args_Invalides : exception;
    Nb_Sommets : Natural;
    T : TS_Ptr := null;
@@ -29,4 +29,4 @@ begin
 exception
    when Args_Invalides =>
       Put_Line (Standard_Error, "utilisation : decpoly data.in out.svg");   
-end Decomposition_Polynomes;
+end Decomposition_Polygones;
