@@ -186,6 +186,7 @@ package body ABR is
    -- sur stdout
    procedure Export_Dot (A : in Arbre) is
       Dot_Out_Str : String(1..15);
+      Last : Integer;
       Dot_Out : File_Type;      
       
       procedure Export_Dot_Rec (SA : in Arbre) is
@@ -214,7 +215,7 @@ package body ABR is
    begin
       Put_Line ("=== Export .dot ===");
       Put_Line ("Nom du fichier d'export : ");
-      Get_Line (Dot_Out_Str);
+      Get_Line (Dot_Out_Str, Last);
       
       Create (File => Dot_Out,
               Mode => Out_File,
