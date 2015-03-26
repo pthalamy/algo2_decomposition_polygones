@@ -11,47 +11,47 @@ package body ABR is
       end if;
    end MAJ_Voisinage;
    
-   procedure Insertion (A : in out Arbre; V : in Natural) is
+   procedure Insertion (A : in out Arbre; C : in Type_Clef) is
    begin
       if A = null then
-	 A := new Noeud'(Val => V, 
+	 A := new Noeud'(C => C, 
 			Fils => (others => null),
 			Pere => null,
 			Compte => 1);
 	 return;
       end if;
       
-      if A.Val <= V then
+      if A.C <= C then
 	 if A.Fils(Droite) = null then
-	    A.Fils(Droite) := new Noeud'(Val => V, 
+	    A.Fils(Droite) := new Noeud'(C => C, 
 					Fils => (others => null),
 					Pere => A,
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	 else 
-	    Insertion (A.Fils(Droite), V);
+	    Insertion (A.Fils(Droite), C);
 	 end if;
       else
 	 if A.Fils(Gauche) = null then
-	    A.Fils(Gauche) := new Noeud'(Val => V, 
+	    A.Fils(Gauche) := new Noeud'(C => C, 
 					Fils => (others => null),
 					Pere => A,
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	 else 
-	    Insertion (A.Fils(Gauche), V);
+	    Insertion (A.Fils(Gauche), C);
 	 end if;
       end if;      
       
    end Insertion;
       
-   procedure Suppression (A : in out Arbre; V : in Natural) is
-      Max : Natural := 0;
+   procedure Suppression (A : in out Arbre; C : in Type_Clef) is
+      Max : Type_Clef := 0;
       
-      procedure Sup_Max (A : in out Arbre; Max : out Natural) is
+      procedure Sup_Max (A : in out Arbre; Max : out Type_Clef) is
       begin 
 	 if A.Fils(Droite) = null then	    
-	    Max := A.Val;
+	    Max := A.C;
 	    A := A.Fils(Gauche);
 	 else
 	    Sup_Max (A.Fils(Droite), Max);	    	    
@@ -60,14 +60,14 @@ package body ABR is
       
    begin
       if A = null then
-	 Put_Line (Standard_Error, "suppression_error: Valeur non présente");
+	 Put_Line (Standard_Error, "suppression_error: Ceur non présente");
 	 return;
       end if;
       
-      if A.Val > V then
-	 Suppression (A.Fils(Gauche), V);
-      elsif A.Val < V then
-	 Suppression (A.Fils(Droite), V);
+      if A.C > C then
+	 Suppression (A.Fils(Gauche), C);
+      elsif A.C < C then
+	 Suppression (A.Fils(Droite), C);
       else
 	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
 	    MAJ_Voisinage (A.Pere, -1);
@@ -81,50 +81,50 @@ package body ABR is
 	    A := A.Fils(Gauche);
 	 else
 	    Sup_Max (A.Fils(Gauche), Max);
-	    A.Val := Max;
+	    A.C := Max;
 	    MAJ_Voisinage (A.Pere, -1);		    
 	 end if;
       end if;      
    end Suppression;
    
    function Recherche (A : in Arbre; 
-		       V : in Natural;
+		       C : in Type_Clef;
 		       R : out Arbre) return Boolean is
    begin
       if A = null then
 	 return False;
       end if;
       
-      if A.Val = V then
+      if A.C = C then
 	 R := A;
 	 return True;
-      elsif A.Val < V then
-	 return Recherche (A.Fils(Droite), V, R);
+      elsif A.C < C then
+	 return Recherche (A.Fils(Droite), C, R);
       else
-	 return Recherche (A.Fils(Gauche), V, R);		   
+	 return Recherche (A.Fils(Gauche), C, R);		   
       end if;
    end Recherche;   
    
    procedure Put (N : Noeud) is
    begin
-      Put (Integer'Image(N.Val) & " (");
+      Put (Integer'Image(Integer(N.C)) & " (");
       
       -- Affichage du voisinnage 
       
       if N.Fils(Gauche) /= null then
-	 Put (Integer'Image(N.Fils(Gauche).Val) & ", ");
+	 Put (Integer'Image(Integer(N.Fils(Gauche).C)) & ", ");
       else
 	 Put ("null, ");
       end if;
       
       if N.Fils(Droite) /= null then
-	 Put (Integer'Image(N.Fils(Droite).Val) & ")");
+	 Put (Integer'Image(Integer(N.Fils(Droite).C)) & ")");
       else
 	 Put ("null)");
       end if;
       
       --  Affichage de la profondeur du sous-arbre      
-      Put (" || Depth : " & Integer'Image(N.Compte));
+      Put (" || Depth : " & Integer'Image(Integer(N.Compte)));
       
       New_Line;
    end Put;
@@ -154,7 +154,7 @@ package body ABR is
    end Noeuds_Voisins;
    
    procedure Compte_Position (Cible : in Arbre; 
-			      Nb_Petits, Nb_Grands : out Natural) is
+			      Nb_Petits, Nb_Grands : out Type_Clef) is
    begin
       null;
    end Compte_Position;

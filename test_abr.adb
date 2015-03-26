@@ -10,9 +10,9 @@ begin
    Get (Nb_Elt);   
    
    declare 
-      Elements : array(1..Nb_Elt) of Natural;
+      Elements : array(1..Nb_Elt) of Type_Clef;
       A : ABR.Arbre := null;
-      R : Natural;
+      R : Type_Clef;
       Found : ABR.Arbre;
    begin
       Put_Line ("Suite d'entiers :");      

@@ -6,6 +6,7 @@ package Defs is
       Y : Float;
    end record;
    
+   type Type_Clef is new Natural;
    type Tab_Sommets is array(Natural range <>) of Sommet;
    type TS_Ptr is access Tab_Sommets;
    
