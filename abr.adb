@@ -48,9 +48,13 @@ package body ABR is
       
    end Insertion;
    
+   procedure Free is
+      new Ada.Unchecked_Deallocation(Noeud, Arbre);
+   
    -- Supprime un noeud de valeur C dans l'arbre dont A est la racine      
    procedure Suppression (A : in out Arbre; C : in Type_Clef) is
       Max : Type_Clef := 0;
+      Fils : Arbre;
       
       -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
       -- dont A est la racine
@@ -58,7 +62,8 @@ package body ABR is
       begin 
 	 if A.Fils(Droite) = null then	    
 	    Max := A.C;
-	    A := A.Fils(Gauche);
+	    Fils := A.Fils(Gauche);
+	    A := Fils;
 	 else
 	    Sup_Max (A.Fils(Droite), Max);	    	    
 	 end if;
@@ -66,7 +71,7 @@ package body ABR is
       
    begin
       if A = null then
-	 Put_Line (Standard_Error, "suppression_error: Ceur non présente");
+	 Put_Line (Standard_Error, "suppression_error: Valeur non présente");
 	 return;
       end if;
       
@@ -76,15 +81,28 @@ package body ABR is
 	 Suppression (A.Fils(Droite), C);
       else
 	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
-	    MAJ_Voisinage (A.Pere, -1);
+	    if A.C <= A.Pere.C then
+	       A.Pere.Fils(Gauche) := null;
+	    else
+	       A.Pere.Fils(Droite) := null;
+	    end if;
+	    
+	    MAJ_Voisinage (A.Pere, -1);	    	    
+	    Free (A);
 	 elsif A.Fils(Gauche) = null then
+	    Fils := A.Fils(Droite);
+	    Fils.Pere := A.Pere;
+	    Free (A);
+	    A := Fils;
+	    	    
 	    MAJ_Voisinage (A.Pere, -1);
-	    A.Fils(Droite).Pere := A.Pere;
-	    A := A.Fils(Droite);
 	 elsif A.Fils(Droite) = null then
+	    Fils := A.Fils(Gauche);
+	    Fils.Pere := A.Pere;
+	    Free (A);
+	    A := Fils;	    
+	    
 	    MAJ_Voisinage (A.Pere, -1);
-	    A.Fils(Gauche).Pere := A.Pere;
-	    A := A.Fils(Gauche);
 	 else
 	    Sup_Max (A.Fils(Gauche), Max);
 	    A.C := Max;
@@ -95,7 +113,7 @@ package body ABR is
    
    
    -- Recherche le noeud de valeur C dans l'arbre dont A est la racine
-   -- Return True si trouvé, false sinon
+   -- Return True si trouvé, False sinon
    -- Retourne aussi R, pointeur sur le noeud recherché
    function Recherche (A : in Arbre; 
 		       C : in Type_Clef;
@@ -121,7 +139,12 @@ package body ABR is
    begin
       Put (Integer'Image(Integer(N.C)) & " (");
       
-      -- Affichage du voisinnage 
+      -- Affichage du voisinnage       
+      if N.Pere /= null then
+	 Put (Integer'Image(Integer(N.Pere.C)) & ", ");
+      else
+	 Put ("null, ");
+      end if;
       
       if N.Fils(Gauche) /= null then
 	 Put (Integer'Image(Integer(N.Fils(Gauche).C)) & ", ");

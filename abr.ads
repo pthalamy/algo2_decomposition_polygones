@@ -1,6 +1,8 @@
 with Ada.Integer_Text_IO, Ada.Text_IO;
 use Ada.Integer_Text_IO, Ada.Text_IO;
 
+with Ada.Unchecked_Deallocation;
+
 with Defs;
 use Defs;
 
@@ -35,5 +37,9 @@ package ABR is
    procedure Compte_Position (Cible : in Arbre; 
 			      Nb_Petits, Nb_Grands : out Type_Clef);
      
+   
+private
+   
+   procedure Put (N : Noeud);
    
 end ABR;
