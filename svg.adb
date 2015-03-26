@@ -63,6 +63,7 @@ package body Svg is
       for I in T.all'First..(T.all'Last - 1) loop	 
 	 Svg_Line (T(I), T(I + 1), Bleu);
       end loop;
+      
       Svg_Line (T(T.all'Last), T(T.all'First), Bleu);
       
       Svg_Footer;
