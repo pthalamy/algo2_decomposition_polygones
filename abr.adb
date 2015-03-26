@@ -88,7 +88,7 @@ package body ABR is
 	 else
 	    Sup_Max (A.Fils(Gauche), Max);
 	    A.C := Max;
-	    MAJ_Voisinage (A.Pere, -1);		    
+	    MAJ_Voisinage (A, -1);		    
 	 end if;
       end if;      
    end Suppression;

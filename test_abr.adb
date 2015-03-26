@@ -1,7 +1,8 @@
 with Ada.Integer_Text_IO, Ada.Text_IO;
 use Ada.Integer_Text_IO, Ada.Text_IO;
 
-with ABR;
+with ABR, Defs;
+use Defs;
 
 procedure Test_ABR is   
    Nb_Elt : Positive;
@@ -17,7 +18,7 @@ begin
    begin
       Put_Line ("Suite d'entiers :");      
       for I in Elements'Range loop
-	 Get (Elements(I));
+	 Get (Integer(Elements(I)));
       end loop;
       
       -- Génération de l'arbre
@@ -28,15 +29,15 @@ begin
       ABR.Affichage (A);      
       
       Put_Line ("Nombre à rechercher :");
-      Get (R);
-      
+      Get (Integer(R));
+
       if ABR.Recherche (A, R, Found) then 
 	 Put_Line ("Trouvé");
       else 
       	 Put_Line ("Introuvable");
       end if;
       
-      Put_Line ("Suppression de " & Integer'Image(R));
+      Put_Line ("Suppression de " & Integer'Image(Integer(R)));
       ABR.Suppression (A, R);
       ABR.Affichage (A);
 	    
