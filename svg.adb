@@ -58,18 +58,12 @@ package body Svg is
               Name => Svg_Out_Str);
       
       Svg_Header;            
-      
-      Put (T.all'Last); New_Line; New_Line;
-      
+            
       -- Tracé du polygone
       for I in T.all'First..(T.all'Last - 1) loop	 
 	 Svg_Line (T(I), T(I + 1), Bleu);
-	 Put_Line ("Trace " & Integer'Image (I)
-		  & " " & Integer'Image (I + 1));
       end loop;
       Svg_Line (T(T.all'Last), T(T.all'First), Bleu);
-      Put_Line ("Trace " & Integer'Image (T.all'Last)
-		  & " " & Integer'Image (T.all'First));
       
       Svg_Footer;
       
