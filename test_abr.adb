@@ -14,8 +14,11 @@ begin
       Elements : array(1..Nb_Elt) of Type_Clef;
       A : ABR.Arbre := null;
       R : ABR.Arbre;
+      
       ClefAR : Type_Clef;
       Vinf, VSup : Type_Clef;
+      
+      PVoisin, GVoisin : ABR.Arbre;
    begin
       Put_Line ("Suite d'entiers :");      
       for I in Elements'Range loop
@@ -38,6 +41,11 @@ begin
       ABR.Compte_Position (R, VInf, VSup);
       Put_Line ("Nb voisins inf: " & Integer'Image(Integer(VInf)));
       Put_Line ("Nb voisins sup: " & Integer'Image(Integer(VSup)));
+      
+      ABR.Noeuds_Voisins (R, PVoisin, GVoisin);
+      Put_Line ("Petit voisin: " & Integer'Image(Integer(PVoisin.C)));
+      Put_Line ("Grand voisin: " & Integer'Image(Integer(GVoisin.C)));
+
       
       --  Put_Line ("Nombre à rechercher :");
       --  Get (Integer(R));
