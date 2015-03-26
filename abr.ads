@@ -35,7 +35,8 @@ package ABR is
 
    
    procedure Compte_Position (Cible : in Arbre; 
-			      Nb_Petits, Nb_Grands : out Type_Clef);
+			      Nb_Noeuds_Clef_Inf : out Type_Clef; 
+			      Nb_Noeuds_Clef_Sup : out Type_Clef);
      
    
 private

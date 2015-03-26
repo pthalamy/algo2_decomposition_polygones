@@ -190,9 +190,56 @@ package body ABR is
    end Noeuds_Voisins;
    
    procedure Compte_Position (Cible : in Arbre; 
-			      Nb_Petits, Nb_Grands : out Type_Clef) is
+			      Nb_Noeuds_Clef_Inf : out Type_Clef;
+			      Nb_Noeuds_Clef_Sup : out Type_Clef) is
+      Noeud_Courant : Noeud ;
    begin
-      null;
+      -- Initialisation des variables
+      Nb_Noeuds_Clef_Inf := 0 ;
+      Nb_Noeuds_Clef_Sup := 0 ;
+      Noeud_Courant := Cible.all ;
+      -- Pour le nombre de noeuds de clef inférieure
+      if (Cible.all.Fils(Gauche) /= null) then -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
+	 Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Cible.all.Fils(Gauche).all.Compte ;
+      end if ;      
+      
+      while (Noeud_Courant.Pere /= null) loop -- On remonte
+	 
+	 if Noeud_Courant.Pere.all.C > Cible.all.C then
+	    
+	    Noeud_Courant := Noeud_Courant.Pere.all ; -- On remonte au noeud père
+	    
+	 elsif Noeud_Courant.Pere.all.C < Cible.all.C then
+	    Noeud_Courant := Noeud_Courant.Pere.all ;
+	    Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + 1 ;
+	    
+	    if (Cible.all.Fils(Gauche) /= null) then
+	       Nb_Noeuds_Clef_Inf := Nb_Noeuds_Clef_Inf + Cible.all.Fils(Gauche).all.Compte ;
+	    end if ;
+	 end if ;
+      end loop ;
+      
+      -- Pour le nombre de noeuds de clef superieure
+      
+      if (Cible.all.Fils(Droite) /= null) then -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
+	 Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Cible.all.Fils(Droite).all.Compte ;
+      end if ;
+      
+      while (Noeud_Courant.Pere /= null) loop -- On remonte
+	 
+	 if (Noeud_Courant.Pere.C < Noeud_Courant.C) then
+	    Noeud_Courant := Noeud_Courant.Pere.all ;
+	    
+	 elsif (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
+	    Noeud_Courant := Noeud_Courant.Pere.all ;
+	    Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + 1 ;
+	    
+	    if (Cible.all.Fils(Droite) /= null) then
+	       Nb_Noeuds_Clef_Sup := Nb_Noeuds_Clef_Sup + Cible.all.Fils(Droite).all.Compte ;
+	    end if ;
+	    
+	 end if;
+      end loop ;  
    end Compte_Position;
 
    
