@@ -230,9 +230,45 @@ package body ABR is
    
    procedure Noeuds_Voisins (Cible : in Arbre; 
 			     Petit_Voisin, Grand_Voisin : out Arbre) is
-      Cour : Arbre := Cible;
    begin
-      null;
+      Petit_Voisin := null ;
+      Grand_Voisin := null ;
+      
+      -- Grand_Voisin : soit le père, soit le premier fils à droite
+      
+      if Cible.Fils(Droite) /= null then
+	 Grand_Voisin := Cible.Fils(Droite) ;
+	 
+      else -- Cible.Fils(Droite) = null
+	 if Cible.Pere /= null then
+	    Grand_Voisin := Cible.Pere ;
+	 elsif Cible.Pere = null then
+	    null ; -- Pas de noeud Sup
+	 end if ;
+      end if ;
+      
+      -- Petit_Voisin : soit le père, ça le dernier fils à droite du fils à gauche
+      
+      if Cible.Fils(Gauche) = null then
+	 if Cible.Pere /= null then 
+	    
+	    if Cible.Pere.all.C > Cible.C then
+	       null ; -- Pas de noeud inferieur
+	    elsif Cible.Pere.all.C < Cible.C then
+	       Petit_Voisin := Cible.Pere ;
+	    end if ;
+	    
+	 elsif Cible.Pere = null then
+	    null ; -- Pas de noeud inferieur
+	 end if ;
+	 
+      else -- Noeud_Cible.Fils(Gauche) /= null	 
+	 Petit_Voisin := Cible.Fils(Gauche) ;
+	 while Petit_Voisin.Fils(Droite) /= null loop
+	    Petit_Voisin := Petit_Voisin.Fils(Droite) ;
+	 end loop ;
+      end if ;
+      
    end Noeuds_Voisins;
    
    procedure Compte_Position (Cible : in Arbre; 
