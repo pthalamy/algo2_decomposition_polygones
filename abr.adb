@@ -247,7 +247,8 @@ package body ABR is
 	 end if ;
       end if ;
       
-      -- Petit_Voisin : soit le père, ça le dernier fils à droite du fils à gauche
+      -- Petit_Voisin : soit le père, ça le dernier fils 
+      -- à droite du fils à gauche
       
       if Cible.Fils(Gauche) = null then
 	 if Cible.Pere /= null then 
@@ -280,30 +281,32 @@ package body ABR is
       Nb_Petits := 0 ;
       Nb_Grands := 0 ;
       Noeud_Courant := Cible.all ;
+      
       -- Pour le nombre de noeuds de clef inférieure
-      if (Cible.all.Fils(Gauche) /= null) then -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
+      if (Cible.all.Fils(Gauche) /= null) then 
+	 -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
 	 Nb_Petits := Nb_Petits + Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
       end if ;      
       
       while (Noeud_Courant.Pere /= null) loop -- On remonte
 	 
 	 if Noeud_Courant.Pere.all.C > Cible.all.C then
-	    
-	    Noeud_Courant := Noeud_Courant.Pere.all ; -- On remonte au noeud père
-	    
+	    -- On remonte au noeud père    
+	    Noeud_Courant := Noeud_Courant.Pere.all ; 
 	 elsif Noeud_Courant.Pere.all.C < Cible.all.C then
 	    Noeud_Courant := Noeud_Courant.Pere.all ;
 	    Nb_Petits := Nb_Petits + 1 ;
 	    
 	    if (Cible.all.Fils(Gauche) /= null) then
-	       Nb_Petits := Nb_Petits + Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
+	       Nb_Petits := Nb_Petits + 
+		 Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
 	    end if ;
 	 end if ;
       end loop ;
       
-      -- Pour le nombre de noeuds de clef superieure
-      
-      if (Cible.all.Fils(Droite) /= null) then -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
+      -- Pour le nombre de noeuds de clef superieure      
+      if (Cible.all.Fils(Droite) /= null) then 
+	 -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
 	 Nb_Grands := Nb_Grands + Type_Clef(Cible.all.Fils(Droite).all.Compte) ;
       end if ;
       
