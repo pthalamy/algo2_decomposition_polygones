@@ -29,7 +29,9 @@ package ABR is
 		       R : out Arbre);
    
    procedure Affichage (A : in Arbre);
-   
+
+   procedure Export_Dot (A : in Arbre);
+     
    procedure Noeuds_Voisins (Cible : in Arbre; 
 			     Petit_Voisin, Grand_Voisin : out Arbre);
 
