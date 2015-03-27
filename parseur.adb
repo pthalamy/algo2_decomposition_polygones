@@ -3,7 +3,7 @@ package body Parseur is
       
    procedure Lecture (Fichier_In_Str : in String;
 		      Nb_Sommets : out Natural;
-		      T : out TS_Ptr)
+		      T : out TSom_Ptr)
    is
       Fichier_In : File_Type;            
    begin
@@ -18,8 +18,8 @@ package body Parseur is
       
       -- Lecture des coordonnées des sommets
       for I in T.all'range loop
-	 Get (Fichier_In, T.all(I).X);
-	 Get (Fichier_In, T.all(I).Y);
+	 Get (Fichier_In, T.all(I).Pos.X);
+	 Get (Fichier_In, T.all(I).Pos.Y);
       end loop;
 
       Close (Fichier_In);

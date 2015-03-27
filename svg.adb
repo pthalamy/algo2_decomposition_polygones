@@ -23,13 +23,13 @@ package body Svg is
    is
    begin
       Put (Svg_Out, "<line x1=""");
-      Put (Svg_Out, A.X);
+      Put (Svg_Out, A.Pos.X);
       Put (Svg_Out, """ y1=""");
-      Put (Svg_Out, A.Y);
+      Put (Svg_Out, A.Pos.Y);
       Put (Svg_Out, """ x2=""");
-      Put (Svg_Out, B.X);
+      Put (Svg_Out, B.Pos.X);
       Put (Svg_Out, """ y2=""");
-      Put (Svg_Out, B.Y);
+      Put (Svg_Out, B.Pos.Y);
       Put (Svg_Out, """ style=""stroke:");
       Put (Svg_Out, Code_Couleur(C));
       Put_Line (Svg_Out, ";stroke-width:0.1""/>");
@@ -50,7 +50,7 @@ package body Svg is
       end Svg_Footer;
 
    procedure Trace_Polygone (Svg_Out_Str : in String;
-			     T : in TS_Ptr)
+			     T : in TSom_Ptr)
    is      
    begin
       Create (File => Svg_Out,

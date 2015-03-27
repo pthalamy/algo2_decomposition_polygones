@@ -8,6 +8,6 @@ package Parseur is
    
    procedure Lecture (Fichier_In_Str : in String;
 		      Nb_Sommets : out Natural;
-		      T : out TS_Ptr);
+		      T : out TSom_Ptr);
    
 end Parseur;

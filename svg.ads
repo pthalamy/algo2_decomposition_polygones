@@ -7,7 +7,7 @@ use Defs;
 package Svg is
    
    procedure Trace_Polygone (Svg_Out_Str : in String;
-			     T : in TS_Ptr);
+			     T : in TSom_Ptr);
    
 private 
    
