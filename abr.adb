@@ -25,7 +25,19 @@ package body ABR is
 	 return A;
       end if;
       
-      if A.C <= C then
+      if A.C > C then
+	 if A.Fils(Gauche) = null then
+	    A.Fils(Gauche) := new Noeud'(C => C, 
+					 Fils => (others => null),
+					 Pere => A,
+					 Compte => 1);
+	    MAJ_Voisinage (A, 1);
+	    
+	    return A.Fils(Gauche);
+	 else 
+	    return Insertion (A.Fils(Gauche), C);
+	 end if;	 
+      else
 	 if A.Fils(Droite) = null then
 	    A.Fils(Droite) := new Noeud'(C => C, 
 					 Fils => (others => null),
@@ -37,18 +49,6 @@ package body ABR is
 	 else 
 	    return Insertion (A.Fils(Droite), C);
 	 end if;
-      else
-	 if A.Fils(Gauche) = null then
-	    A.Fils(Gauche) := new Noeud'(C => C, 
-					 Fils => (others => null),
-					 Pere => A,
-					 Compte => 1);
-	    MAJ_Voisinage (A, 1);
-	    
-	    return A.Fils(Gauche);
-	 else 
-	    return Insertion (A.Fils(Gauche), C);
-	 end if;
       end if;      
       
    end Insertion;
@@ -58,7 +58,7 @@ package body ABR is
    
    -- Supprime un noeud de valeur C dans l'arbre dont A est la racine      
    procedure Suppression (A : in out Arbre; C : in Type_Clef) is
-      Max : Type_Clef := 0;
+      Max : Type_Clef;
       Fils : Arbre;
       
       -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
@@ -82,36 +82,38 @@ package body ABR is
       
       if A.C > C then
 	 Suppression (A.Fils(Gauche), C);
-      elsif A.C < C then
-	 Suppression (A.Fils(Droite), C);
-      else
-	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
-	    if A.C <= A.Pere.C then
-	       A.Pere.Fils(Gauche) := null;
+      else -- A.C < C ou A.C = C
+	 if A.C = C then -- A.C = C ?
+	    if A.Fils(Gauche) = null and A.Fils(Droite) = null then
+	       if A.C > A.Pere.C then
+		  A.Pere.Fils(Droite) := null;
+	       else
+		  A.Pere.Fils(Gauche) := null;
+	       end if;
+	       
+	       MAJ_Voisinage (A.Pere, -1);	    	    
+	       Free (A);
+	    elsif A.Fils(Gauche) = null then
+	       Fils := A.Fils(Droite);
+	       Fils.Pere := A.Pere;
+	       Free (A);
+	       A := Fils;
+	       
+	       MAJ_Voisinage (A.Pere, -1);
+	    elsif A.Fils(Droite) = null then
+	       Fils := A.Fils(Gauche);
+	       Fils.Pere := A.Pere;
+	       Free (A);
+	       A := Fils;	    
+	       
+	       MAJ_Voisinage (A.Pere, -1);
 	    else
-	       A.Pere.Fils(Droite) := null;
-	    end if;
-	    
-	    MAJ_Voisinage (A.Pere, -1);	    	    
-	    Free (A);
-	 elsif A.Fils(Gauche) = null then
-	    Fils := A.Fils(Droite);
-	    Fils.Pere := A.Pere;
-	    Free (A);
-	    A := Fils;
-	    	    
-	    MAJ_Voisinage (A.Pere, -1);
-	 elsif A.Fils(Droite) = null then
-	    Fils := A.Fils(Gauche);
-	    Fils.Pere := A.Pere;
-	    Free (A);
-	    A := Fils;	    
-	    
-	    MAJ_Voisinage (A.Pere, -1);
-	 else
-	    Sup_Max (A.Fils(Gauche), Max);
-	    A.C := Max;
-	    MAJ_Voisinage (A, -1);		    
+	       Sup_Max (A.Fils(Gauche), Max);
+	       A.C := Max;
+	       MAJ_Voisinage (A, -1);		    
+	    end if;	    
+	 else -- A.C < C
+	    Suppression (A.Fils(Droite), C);		 
 	 end if;
       end if;      
    end Suppression;
@@ -132,41 +134,42 @@ package body ABR is
       if A.C = C then
 	 R := A;
 	 return ;
-      elsif A.C < C then
-	 Recherche (A.Fils(Droite), C, R);
-      else
+      elsif A.C > C then
 	 Recherche (A.Fils(Gauche), C, R);		   
+      else
+	 Recherche (A.Fils(Droite), C, R);
       end if;
    end Recherche;   
    
    -- Affiche le noeud N sur Stdout
    procedure Put (N : Noeud) is
    begin
-      Put (Integer'Image(Integer(N.C)) & " (");
+      Put ("NYI");
+      --  Put (Integer'Image(Integer(N.C)) & " (");
       
       -- Affichage du voisinnage       
-      if N.Pere /= null then
-	 Put (Integer'Image(Integer(N.Pere.C)) & ", ");
-      else
-	 Put ("null, ");
-      end if;
+      --  if N.Pere /= null then
+      --  	 Put (Integer'Image(Integer(N.Pere.C)) & ", ");
+      --  else
+      --  	 Put ("null, ");
+      --  end if;
       
-      if N.Fils(Gauche) /= null then
-	 Put (Integer'Image(Integer(N.Fils(Gauche).C)) & ", ");
-      else
-	 Put ("null, ");
-      end if;
+      --  if N.Fils(Gauche) /= null then
+      --  	 Put (Integer'Image(Integer(N.Fils(Gauche).C)) & ", ");
+      --  else
+      --  	 Put ("null, ");
+      --  end if;
       
-      if N.Fils(Droite) /= null then
-	 Put (Integer'Image(Integer(N.Fils(Droite).C)) & ")");
-      else
-	 Put ("null)");
-      end if;
+      --  if N.Fils(Droite) /= null then
+      --  	 Put (Integer'Image(Integer(N.Fils(Droite).C)) & ")");
+      --  else
+      --  	 Put ("null)");
+      --  end if;
       
       --  Affichage de la profondeur du sous-arbre      
-      Put (" || Depth : " & Integer'Image(Integer(N.Compte)));
+      --  Put (" || Depth : " & Integer'Image(Integer(N.Compte)));
       
-      New_Line;
+      --  New_Line;
    end Put;
    
    -- Affiche l'arbre dont A est la racine sur stdout
@@ -196,25 +199,26 @@ package body ABR is
       
       procedure Export_Dot_Rec (SA : in Arbre) is
       begin
-	 if SA = null then
-	    return;
-	 end if;
+	 Put ("NYI");
+	 --  if SA = null then
+	 --     return;
+	 --  end if;
 	 
-	 if SA.Fils(Gauche) /= null then
-	    Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
-			& " -- " 
-			& Integer'Image(Integer(SA.Fils(Gauche).C))
-		     );
-	    Export_Dot_Rec (SA.Fils(Gauche));
-	 end if;
+	 --  if SA.Fils(Gauche) /= null then
+	 --     Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
+	 --  		& " -- " 
+	 --  		& Integer'Image(Integer(SA.Fils(Gauche).C))
+	 --  	     );
+	 --     Export_Dot_Rec (SA.Fils(Gauche));
+	 --  end if;
 	 
-	 if SA.Fils(Droite) /= null then
-	    Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
-			& " -- " 
-			& Integer'Image(Integer(SA.Fils(Droite).C))
-		     );
-	    Export_Dot_Rec (SA.Fils(Droite));
-	 end if;
+	 --  if SA.Fils(Droite) /= null then
+	 --     Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
+	 --  		& " -- " 
+	 --  		& Integer'Image(Integer(SA.Fils(Droite).C))
+	 --  	     );
+	 --     Export_Dot_Rec (SA.Fils(Droite));
+	 --  end if;
       end Export_Dot_Rec;
       
    begin
@@ -260,8 +264,10 @@ package body ABR is
 	    
 	    if Cible.Pere.all.C > Cible.C then
 	       null ; -- Pas de noeud inferieur
-	    elsif Cible.Pere.all.C < Cible.C then
-	       Petit_Voisin := Cible.Pere ;
+	    else
+	       if Cible.Pere.all.C /= Cible.C then
+		  Petit_Voisin := Cible.Pere ;
+	       end if;
 	    end if ;
 	    
 	 elsif Cible.Pere = null then
@@ -278,8 +284,8 @@ package body ABR is
    end Noeuds_Voisins;
    
    procedure Compte_Position (Cible : in Arbre; 
-			      Nb_Petits : out Type_Clef;
-			      Nb_Grands : out Type_Clef) is
+			      Nb_Petits : out Natural;
+			      Nb_Grands : out Natural) is
       Noeud_Courant : Noeud ;
    begin
       -- Initialisation des variables
@@ -290,7 +296,7 @@ package body ABR is
       -- Pour le nombre de noeuds de clef inférieure
       if (Cible.all.Fils(Gauche) /= null) then 
 	 -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
-	 Nb_Petits := Nb_Petits + Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
+	 Nb_Petits := Nb_Petits + Cible.all.Fils(Gauche).all.Compte ;
       end if ;      
       
       while (Noeud_Courant.Pere /= null) loop -- On remonte
@@ -298,36 +304,39 @@ package body ABR is
 	 if Noeud_Courant.Pere.all.C > Cible.all.C then
 	    -- On remonte au noeud père    
 	    Noeud_Courant := Noeud_Courant.Pere.all ; 
-	 elsif Noeud_Courant.Pere.all.C < Cible.all.C then
-	    Noeud_Courant := Noeud_Courant.Pere.all ;
-	    Nb_Petits := Nb_Petits + 1 ;
-	    
-	    if (Cible.all.Fils(Gauche) /= null) then
-	       Nb_Petits := Nb_Petits + 
-		 Type_Clef(Cible.all.Fils(Gauche).all.Compte) ;
-	    end if ;
-	 end if ;
+	 else
+	    if Noeud_Courant.Pere.all.C /= Cible.all.C then
+	       Noeud_Courant := Noeud_Courant.Pere.all ;
+	       Nb_Petits := Nb_Petits + 1 ;
+	       
+	       if (Cible.all.Fils(Gauche) /= null) then
+		  Nb_Petits := Nb_Petits + 
+		    Cible.all.Fils(Gauche).all.Compte ;
+	       end if ;
+	    end if;
+	 end if;
       end loop ;
       
       -- Pour le nombre de noeuds de clef superieure      
       if (Cible.all.Fils(Droite) /= null) then 
 	 -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
-	 Nb_Grands := Nb_Grands + Type_Clef(Cible.all.Fils(Droite).all.Compte) ;
+	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
       end if ;
       
       while (Noeud_Courant.Pere /= null) loop -- On remonte
 	 
-	 if (Noeud_Courant.Pere.C < Noeud_Courant.C) then
-	    Noeud_Courant := Noeud_Courant.Pere.all ;
-	    
-	 elsif (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
+	 if (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
 	    Noeud_Courant := Noeud_Courant.Pere.all ;
 	    Nb_Grands := Nb_Grands + 1 ;
 	    
 	    if (Cible.all.Fils(Droite) /= null) then
-	       Nb_Grands := Nb_Grands + Type_Clef(Cible.all.Fils(Droite).all.Compte) ;
+	       Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
 	    end if ;
-	    
+
+	 else
+	    if (Noeud_Courant.Pere.C /= Noeud_Courant.C) then
+	       Noeud_Courant := Noeud_Courant.Pere.all ;
+	    end if;
 	 end if;
       end loop ;  
    end Compte_Position;
