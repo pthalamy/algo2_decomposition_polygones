@@ -1,6 +1,8 @@
 with Ada.Text_IO, Ada.Float_Text_IO, Ada.Command_Line;
 use Ada.Text_IO, Ada.Float_Text_IO, Ada.Command_Line;
 
+with Ada.Containers.Generic_Array_Sort;
+
 with Parseur, Defs, ABR, Svg, Liste;
 use Defs;
 
@@ -13,23 +15,73 @@ procedure Decomposition_Polygones is
    begin
       for I in T.all'First..(T.all'Last - 1) loop	 
 	 if T(I).Pos.X < T(I + 1).Pos.X then
-	   Liste.Enqueue (T(I).Sortants, (T(I), T(I+1)));
+	    Liste.Enqueue (T(I).Sortants, (T(I).Pos, T(I+1).Pos));
+	    Liste.Enqueue (T(I+1).Entrants, (T(I).Pos, T(I+1).Pos));
 	 else
-	    Liste.Enqueue (T(I).Entrants, (T(I), T(I+1)));
+	    Liste.Enqueue (T(I).Entrants, (T(I+1).Pos, T(I).Pos));
+	    Liste.Enqueue (T(I+1).Sortants, (T(I+1).Pos, T(I).Pos));
 	 end if;
       end loop;
       
       -- Prise en compte du segment entre le dernier et premier point
       if T(T.all'Last).Pos.X < T(T.all'First).Pos.X then
 	 Liste.Enqueue (T(T.all'Last).Sortants, 
-			(T(T.all'Last), 
-			 T(T.all'First)));
+			(T(T.all'Last).Pos, 
+			 T(T.all'First).Pos));
+	 Liste.Enqueue (T(T.all'First).Entrants, 
+			(T(T.all'Last).Pos, 
+			 T(T.all'First).Pos));
       else
 	 Liste.Enqueue (T(T.all'Last).Entrants, 
-			(T(T.all'Last), 
-			 T(T.all'First)));
+			(T(T.all'First).Pos, 
+			 T(T.all'Last).Pos));
+	 Liste.Enqueue (T(T.all'First).Sortants, 
+			(T(T.all'First).Pos, 
+			 T(T.all'Last).Pos));		 
       end if;
    end Init_Segments;
+   
+   procedure Affichage_Sommets (T : TSom_Ptr) is
+   begin
+      for I in T.all'Range loop	 
+	 Put_Line ("=== Sommet " & Integer'Image(I) & " ===");
+	 Put_Line (" Position : " & Point2Str(T(I).Pos));
+	 Put_Line (" Segments entrants : ");
+	 Liste.Put (T(I).Entrants);
+	 Put_Line (" Segments sortants : ");
+	 Liste.Put (T(I).Sortants);
+	 New_Line;
+      end loop;      
+   end Affichage_Sommets;
+   
+   -- Fonction nécessaire à l'instantiation de Generic_Array_Sort 
+   -- Compare deux éléments du tableau pour son tri croissant
+   function "<" (A, B : Sommet) return Boolean is
+   begin
+      return  A.Pos.X < B.Pos.X;
+   end "<";
+   
+   -- Instanciation du package generic sort de la bibliothèque standard Ada
+   procedure TriParAbsisseCroissante is 
+      new Ada.Containers.Generic_Array_Sort (Index_Type => Natural, 
+					     Element_Type => Sommet, 
+					     Array_Type => Tab_Sommets);
+   
+   procedure Parcours_Sommets(T : in TSom_Ptr; myABR : in out ABR.Arbre) is
+      R : Boolean := False;
+      S : Segment;
+   begin 
+      --  for I in T'Range loop
+      --  	 if T(I).Sortants'Length = 2 then
+      --  	    R := True;
+      --  	    S := (T(I).Pos, T(I).Pos);
+      --  	    ABR.Insertion (A, S);
+      --  	    ABR.Noeuds_Voisins ();
+      --  	 end if;
+      --  end loop;
+      
+      null;
+   end Parcours_Sommets;
    
 begin
    if Argument_Count /= 2 then
@@ -40,12 +92,9 @@ begin
    
    Put_Line ("Nombre de sommets : " & Integer'Image(Nb_Sommets));
    
-   for I in T.all'Range loop
-      Put (T.all(I).Pos.X);
-      Put (' ');
-      Put (T.all(I).Pos.Y);
-      New_Line;
-   end loop;
+   Init_Segments (T);
+   TriParAbsisseCroissante (T.all);
+   Affichage_Sommets (T);   
    
    Svg.Trace_Polygone (Argument(2), T);
    
