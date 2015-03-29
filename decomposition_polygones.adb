@@ -71,7 +71,7 @@ procedure Decomposition_Polygones is
    
    procedure Parcours_Sommets(T : in TSom_Ptr; A : in out ABR.Arbre) is
       R : Boolean := False;
-      S : Segment;
+      S : Type_Clef;
       N : ABR.Arbre;
       V_Petit, V_Grand : ABR.Arbre;
       C_Petit, C_Grand : Natural;
@@ -82,8 +82,31 @@ procedure Decomposition_Polygones is
       	    S := (T(I).Pos, T(I).Pos);
       	    N := ABR.Insertion (A, Type_Clef(S));
       	    ABR.Noeuds_Voisins (N, V_Petit, V_Grand);
-	    
-      	 end if;
+	    ABR.Compte_Position (N, C_Petit, C_Grand);
+	    ABR.Suppression (N, S);
+	 end if;
+	 
+	 -- TODO:
+	 -- Enlever les segments qui terminent sur le point courant de l'ABR
+	 -- Ajouter les segments qui commencent sur le point courant à l'ABRx
+	 
+	 if Liste.Length(T(I).Entrants) = 2 then
+	    R := True;
+      	    S := (T(I).Pos, T(I).Pos);
+      	    N := ABR.Insertion (A, Type_Clef(S));
+      	    ABR.Noeuds_Voisins (N, V_Petit, V_Grand);
+	    ABR.Compte_Position (N, C_Petit, C_Grand);
+	    ABR.Suppression (N, S);
+	 end if;
+	 
+	 if R then
+	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
+	       -- TODO:
+	       -- Reconnecter le point verticalement aux segments voisins
+	       -- Afficher les segments ajoutés sur STDOUT
+	       null;
+	    end if;
+	 end if;
       end loop;
       
       null;
