@@ -14,35 +14,40 @@ package body ABR is
    end MAJ_Voisinage;
    
    -- Insere un noeud de valeur C dans l'arbre dont A est la racine
-   procedure Insertion (A : in out Arbre; C : in Type_Clef) is
+   -- Et retourne un pointeur sur son emplacement
+   function Insertion (A : in out Arbre; C : in Type_Clef) return Arbre is
    begin
       if A = null then
 	 A := new Noeud'(C => C, 
 			Fils => (others => null),
 			Pere => null,
-			Compte => 1);
-	 return;
+			 Compte => 1);	 
+	 return A;
       end if;
       
       if A.C <= C then
 	 if A.Fils(Droite) = null then
 	    A.Fils(Droite) := new Noeud'(C => C, 
-					Fils => (others => null),
-					Pere => A,
+					 Fils => (others => null),
+					 Pere => A,
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
+	    
+	    return A.Fils(Droite);
 	 else 
-	    Insertion (A.Fils(Droite), C);
+	    return Insertion (A.Fils(Droite), C);
 	 end if;
       else
 	 if A.Fils(Gauche) = null then
 	    A.Fils(Gauche) := new Noeud'(C => C, 
-					Fils => (others => null),
-					Pere => A,
+					 Fils => (others => null),
+					 Pere => A,
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
+	    
+	    return A.Fils(Gauche);
 	 else 
-	    Insertion (A.Fils(Gauche), C);
+	    return Insertion (A.Fils(Gauche), C);
 	 end if;
       end if;      
       

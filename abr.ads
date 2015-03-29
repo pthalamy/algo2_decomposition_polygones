@@ -20,7 +20,7 @@ package ABR is
    end record;
    type MAJ is range -1 .. 1;
    
-   procedure Insertion (A : in out Arbre; C : in Type_Clef);
+   function Insertion (A : in out Arbre; C : in Type_Clef) return Arbre;
    
    procedure Suppression (A : in out Arbre; C : in Type_Clef);
    
