@@ -32,11 +32,11 @@ package Defs is
          
    -- Types de stockage
    
-   type Type_Clef is new Natural;   
+   type Type_Clef is new Segment;
    type Tab_Sommets is array(Natural range <>) of Sommet;
    type TSom_Ptr is access Tab_Sommets;
    
-   function ">"(S1, S2 : in Segment) return Boolean;
+   function ">"(S1, S2 : in Type_Clef) return Boolean;
    function Point2Str (P : Position) return String;   
    procedure Put (S : Segment);
    
