@@ -46,9 +46,11 @@ procedure Decomposition_Polygones is
       for I in T.all'Range loop	 
 	 Put_Line ("=== Sommet " & Integer'Image(I) & " ===");
 	 Put_Line (" Position : " & Point2Str(T(I).Pos));
-	 Put_Line (" Segments entrants : ");
+	 Put (" Segments entrants : "); 
+	 Put_Line (Integer'Image(Liste.Length(T(I).Entrants)));
 	 Liste.Put (T(I).Entrants);
-	 Put_Line (" Segments sortants : ");
+	 Put (" Segments sortants : ");
+	 Put_Line (Integer'Image(Liste.Length(T(I).Sortants)));
 	 Liste.Put (T(I).Sortants);
 	 New_Line;
       end loop;      
@@ -67,18 +69,22 @@ procedure Decomposition_Polygones is
 					     Element_Type => Sommet, 
 					     Array_Type => Tab_Sommets);
    
-   procedure Parcours_Sommets(T : in TSom_Ptr; myABR : in out ABR.Arbre) is
+   procedure Parcours_Sommets(T : in TSom_Ptr; A : in out ABR.Arbre) is
       R : Boolean := False;
       S : Segment;
+      N : ABR.Arbre;
+      V_Petit, V_Grand : ABR.Arbre;
+      C_Petit, C_Grand : Natural;
    begin 
-      --  for I in T'Range loop
-      --  	 if T(I).Sortants'Length = 2 then
-      --  	    R := True;
-      --  	    S := (T(I).Pos, T(I).Pos);
-      --  	    ABR.Insertion (A, S);
-      --  	    ABR.Noeuds_Voisins ();
-      --  	 end if;
-      --  end loop;
+      for I in T'Range loop
+      	 if Liste.Length(T(I).Sortants) = 2 then
+      	    R := True;
+      	    S := (T(I).Pos, T(I).Pos);
+      	    N := ABR.Insertion (A, Type_Clef(S));
+      	    ABR.Noeuds_Voisins (N, V_Petit, V_Grand);
+	    
+      	 end if;
+      end loop;
       
       null;
    end Parcours_Sommets;
