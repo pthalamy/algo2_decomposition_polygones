@@ -75,6 +75,8 @@ procedure Decomposition_Polygones is
       N : Arbre;
       V_Petit, V_Grand : Arbre;
       C_Petit, C_Grand : Natural;
+      
+      Seg_Cour : Cell_Ptr;
    begin 
       for I in T'Range loop
       	 if Liste.Length(T(I).Sortants) = 2 then
@@ -86,9 +88,18 @@ procedure Decomposition_Polygones is
 	    Suppression (N, S);
 	 end if;
 	 
-	 -- TODO:
 	 -- Enlever les segments qui terminent sur le point courant de l'ABR
-	 -- Ajouter les segments qui commencent sur le point courant à l'ABRx
+	 Seg_Cour := T(I).Entrants.Tete;
+	 while Seg_Cour /= null loop
+	    Suppression (A, Seg_Cour.Seg);
+	    Seg_Cour := Seg_Cour.Suiv;
+	 end loop;
+	 -- Ajouter les segments qui commencent sur le point courant à l'ABR
+	 Seg_Cour := T(I).Sortants.Tete;
+	 while Seg_Cour /= null loop
+	    N := Insertion (A, Seg_Cour.Seg);
+	    Seg_Cour := Seg_Cour.Suiv;
+	 end loop;
 	 
 	 if Liste.Length(T(I).Entrants) = 2 then
 	    R := True;
@@ -103,7 +114,7 @@ procedure Decomposition_Polygones is
 	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
 	       -- TODO:
 	       -- Reconnecter le point verticalement aux segments voisins
-	       -- Afficher les segments ajoutés sur STDOUT
+	       -- Afficher les segments ajoutés sur STDOUT	       
 	       null;
 	    end if;
 	 end if;
