@@ -42,20 +42,17 @@ package body Liste is
       Cour : Cell_Ptr;
    begin
       if L.Tete = null then
-         raise Liste_Vide;
+	 return;
       end if;
 
       Cour := L.Tete;
 
       while Cour /= null loop
-	 Put ("NIY");
+	 Put (Cour.Seg);
          New_Line;
          Cour := Cour.Suiv;
       end loop;
 
-   exception
-      when Liste_Vide =>
-         Put_Line ("La liste est vide.");
    end Put;
 
 end Liste;
