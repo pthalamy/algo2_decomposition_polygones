@@ -1,6 +1,8 @@
 with Ada.Text_IO;
 use Ada.Text_IO;
 
+with Generic_ABR;
+
 package Defs is        
       
    type Position is record
@@ -29,14 +31,18 @@ package Defs is
       Seg : Segment;
       Suiv : Cell_Ptr;
    end record;
-         
+   
+   -- Instantiation de l'arbre generique avec le type segment :      
+   function ">"(S1, S2 : in Segment) return Boolean;
+   package ABR_Seg is 
+      new Generic_ABR (Type_Clef => Segment);
+   ----------
+   
    -- Types de stockage
    
-   type Type_Clef is new Segment;
    type Tab_Sommets is array(Natural range <>) of Sommet;
    type TSom_Ptr is access Tab_Sommets;
    
-   function ">"(S1, S2 : in Type_Clef) return Boolean;
    function Point2Str (P : Position) return String;   
    procedure Put (S : Segment);
    

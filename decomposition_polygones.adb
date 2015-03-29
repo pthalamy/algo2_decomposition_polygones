@@ -3,14 +3,14 @@ use Ada.Text_IO, Ada.Float_Text_IO, Ada.Command_Line;
 
 with Ada.Containers.Generic_Array_Sort;
 
-with Parseur, Defs, ABR, Svg, Liste;
-use Defs;
+with Parseur, Defs, Svg, Liste;
+use Defs, Defs.ABR_Seg;
 
 procedure Decomposition_Polygones is
    Args_Invalides : exception;
    Nb_Sommets : Natural;
    T : TSom_Ptr := null;
-   
+      
    procedure Init_Segments(T : TSom_Ptr) is
    begin
       for I in T.all'First..(T.all'Last - 1) loop	 
@@ -69,21 +69,21 @@ procedure Decomposition_Polygones is
 					     Element_Type => Sommet, 
 					     Array_Type => Tab_Sommets);
    
-   procedure Parcours_Sommets(T : in TSom_Ptr; A : in out ABR.Arbre) is
+   procedure Parcours_Sommets(T : in TSom_Ptr; A : in out Arbre) is
       R : Boolean := False;
-      S : Type_Clef;
-      N : ABR.Arbre;
-      V_Petit, V_Grand : ABR.Arbre;
+      S : Segment;
+      N : Arbre;
+      V_Petit, V_Grand : Arbre;
       C_Petit, C_Grand : Natural;
    begin 
       for I in T'Range loop
       	 if Liste.Length(T(I).Sortants) = 2 then
       	    R := True;
       	    S := (T(I).Pos, T(I).Pos);
-      	    N := ABR.Insertion (A, Type_Clef(S));
-      	    ABR.Noeuds_Voisins (N, V_Petit, V_Grand);
-	    ABR.Compte_Position (N, C_Petit, C_Grand);
-	    ABR.Suppression (N, S);
+      	    N := Insertion (A, S);
+      	    Noeuds_Voisins (N, V_Petit, V_Grand);
+	    Compte_Position (N, C_Petit, C_Grand);
+	    Suppression (N, S);
 	 end if;
 	 
 	 -- TODO:
@@ -93,10 +93,10 @@ procedure Decomposition_Polygones is
 	 if Liste.Length(T(I).Entrants) = 2 then
 	    R := True;
       	    S := (T(I).Pos, T(I).Pos);
-      	    N := ABR.Insertion (A, Type_Clef(S));
-      	    ABR.Noeuds_Voisins (N, V_Petit, V_Grand);
-	    ABR.Compte_Position (N, C_Petit, C_Grand);
-	    ABR.Suppression (N, S);
+      	    N := Insertion (A, S);
+      	    Noeuds_Voisins (N, V_Petit, V_Grand);
+	    Compte_Position (N, C_Petit, C_Grand);
+	    Suppression (N, S);
 	 end if;
 	 
 	 if R then
