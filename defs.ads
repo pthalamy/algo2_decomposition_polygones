@@ -1,3 +1,5 @@
+with Ada.Text_IO;
+use Ada.Text_IO;
 
 package Defs is        
       
@@ -20,7 +22,7 @@ package Defs is
    end record;
    
    type Segment is record
-      A, B : Sommet;
+      A, B : Position;
    end record;
    
    type Cellule is record
@@ -35,5 +37,7 @@ package Defs is
    type TSom_Ptr is access Tab_Sommets;
    
    function ">"(S1, S2 : in Segment) return Boolean;
+   function Point2Str (P : Position) return String;   
+   procedure Put (S : Segment);
    
 end Defs;
