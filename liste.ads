@@ -15,5 +15,8 @@ package Liste is
    
    -- Affiche le contenu d'une liste
    procedure Put (L : in Liste_Segments);
-
+   
+   -- Retourne le nombre d'éléments dans la liste
+   function Length (L : in Liste_Segments) Return Natural;
+   
 end Liste;

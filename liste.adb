@@ -52,7 +52,18 @@ package body Liste is
          New_Line;
          Cour := Cour.Suiv;
       end loop;
-
    end Put;
+   
+   function Length (L : in Liste_Segments) Return Natural is
+      N : Natural := 0;
+      Cour : Cell_Ptr := L.Tete;
+   begin
+      while Cour /= null loop
+	 N := N + 1;
+         Cour := Cour.Suiv;
+      end loop;
+      
+      return N;
+   end Length;
 
 end Liste;
