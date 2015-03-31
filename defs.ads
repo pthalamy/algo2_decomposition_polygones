@@ -34,6 +34,7 @@ package Defs is
    
    -- Instantiation de l'arbre generique avec le type segment :      
    function ">"(S1, S2 : in Segment) return Boolean;
+   procedure Put (S : Segment);      
    package ABR_Seg is 
       new Generic_ABR (Type_Clef => Segment);
    ----------
@@ -44,6 +45,5 @@ package Defs is
    type TSom_Ptr is access Tab_Sommets;
    
    function Point2Str (P : Position) return String;   
-   procedure Put (S : Segment);
    
 end Defs;
