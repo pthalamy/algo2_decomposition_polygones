@@ -290,7 +290,7 @@ package body Generic_ABR is
       
    end Noeuds_Voisins;
    
-   procedure Compte_Position (Cible : in Arbre; 
+   procedure Compte_Position (Cible : in Arbre;
 			      Nb_Petits : out Natural;
 			      Nb_Grands : out Natural) is
       Arbre_Courant : Arbre;
@@ -311,8 +311,7 @@ package body Generic_ABR is
 	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte;
       end if;  
       
-      while (Arbre_Courant.all.Pere /= null) loop
-	 -- On remonte
+      while (Arbre_Courant.all.Pere /= null) loop -- On remonte
 	 
 	 if (Arbre_Courant.all.Pere.all.C > Arbre_Courant.all.C) then
 	    -- On différencie les cas où l'on est à droite ou à gauche du père
@@ -320,24 +319,22 @@ package body Generic_ABR is
 	    Arbre_Courant := Arbre_Courant.all.Pere;
 	    Nb_Grands := Nb_Grands + 1;
 	    
-	    if (Cible.all.Fils(Droite) /= null) then 
-	       Nb_Grands := Nb_Grands + 
-		 Arbre_Courant.all.Fils(Droite).all.Compte;
-	    end if;
+	    if (Arbre_Courant.all.Fils(Droite) /= null) then 
+	       Nb_Grands := Nb_Grands + Arbre_Courant.all.Fils(Droite).all.Compte ;
+	    end if ;
 	    
-	 else 
-	    -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) 
-	    -- On ne regarde pas le cas d'égalité
-	    Arbre_Courant := Arbre_Courant.all.Pere;
-	    Nb_Petits := Nb_Petits + 1;
+	 else -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) then -- On ne regarde pas le cas d'égalité
+	    Arbre_Courant := Arbre_Courant.all.Pere ;
+	    Nb_Petits := Nb_Petits + 1 ;
 	    
-	    if (Cible.all.Fils(Gauche) /= null) then
+	    if (Arbre_Courant.all.Fils(Gauche) /= null) then
 	       Nb_Petits := Nb_Petits + 
-		 Arbre_Courant.all.Fils(Gauche).all.Compte;
-	    end if;
+		 Arbre_Courant.all.Fils(Gauche).all.Compte ;
+	    end if ;
 	    
-	 end if;
-      end loop;
-   end Compte_Position;
-
+	 end if ;
+      end loop ;
+   end Compte_Position ;
+   
+   
 end Generic_ABR;

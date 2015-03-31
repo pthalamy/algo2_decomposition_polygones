@@ -53,7 +53,7 @@ begin
 		     & Integer'Image(Elements(I)));
 	 	 
 	 Recherche (A, Elements(I), R);
-	 Affichage (A);
+
 	 Compte_Position (R, VInf, VSup);
 	 Put_Line ("Nb voisins inf: " & Integer'Image(VInf));
 	 Put_Line ("Nb voisins sup: " & Integer'Image(VSup));
