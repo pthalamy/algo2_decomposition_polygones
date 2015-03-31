@@ -50,23 +50,24 @@ begin
       for I in Elements'Range loop
 	 New_Line;
 	 Put_Line ("Recherche et compte de voisins de : " 
-		     & Integer'Image(Integer(Elements(I))));
-	 
+		     & Integer'Image(Elements(I)));
+	 	 
 	 Recherche (A, Elements(I), R);
+	 Affichage (A);
 	 Compte_Position (R, VInf, VSup);
-	 Put_Line ("Nb voisins inf: " & Integer'Image(Integer(VInf)));
-	 Put_Line ("Nb voisins sup: " & Integer'Image(Integer(VSup)));
+	 Put_Line ("Nb voisins inf: " & Integer'Image(VInf));
+	 Put_Line ("Nb voisins sup: " & Integer'Image(VSup));
 	 
 	 Noeuds_Voisins (R, PVoisin, GVoisin);
 	 
 	 if PVoisin /= null then
-	    Put_Line ("Petit voisin: " & Integer'Image(Integer(PVoisin.C)));
+	    Put_Line ("Petit voisin: " & Integer'Image(PVoisin.C));
 	 else
 	    Put_Line ("Petit voisin: " & "null");
 	 end if;
 	 
 	 if GVoisin /= null then
-	    Put_Line ("Grand voisin: " & Integer'Image(Integer(GVoisin.C)));
+	    Put_Line ("Grand voisin: " & Integer'Image(GVoisin.C));
 	 else 
 	    Put_Line ("Grand voisin: " & "null");		    
 	 end if;
