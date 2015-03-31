@@ -13,19 +13,21 @@ package ABR is
    type Direction is (Gauche , Droite);
    type Tableau_Fils is array(Direction) of Arbre; 
    type Noeud is record 
-      C : Type_Clef; -- Pour le moment en test
+      --C : Type_Clef; -- Pour le moment en test
+      C : Integer ;
       Fils : Tableau_Fils;
       Pere : Arbre;
       Compte : Positive; -- nombre de noeuds dans le sous−arbre 
    end record;
    type MAJ is range -1 .. 1;
    
-   function Insertion (A : in out Arbre; C : in Type_Clef) return Arbre;
+   -- Passage de fonction en procedure
+   procedure Insertion (A : in out Arbre; C : in Integer);
    
-   procedure Suppression (A : in out Arbre; C : in Type_Clef);
+   procedure Suppression (A : in out Arbre; C : in Integer);
    
    procedure Recherche (A : in Arbre; 
-		       C : in Type_Clef;
+		       C : in Integer;
 		       R : out Arbre);
    
    procedure Affichage (A : in Arbre);

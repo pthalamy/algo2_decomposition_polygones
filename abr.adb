@@ -15,14 +15,16 @@ package body ABR is
    
    -- Insere un noeud de valeur C dans l'arbre dont A est la racine
    -- Et retourne un pointeur sur son emplacement
-   function Insertion (A : in out Arbre; C : in Type_Clef) return Arbre is
+   
+   -- passage en procedure
+   
+   procedure Insertion (A : in out Arbre; C : in Integer) is
    begin
       if A = null then
 	 A := new Noeud'(C => C, 
 			Fils => (others => null),
 			Pere => null,
 			 Compte => 1);	 
-	 return A;
       end if;
       
       if A.C > C then
@@ -33,9 +35,8 @@ package body ABR is
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	    
-	    return A.Fils(Gauche);
 	 else 
-	    return Insertion (A.Fils(Gauche), C);
+	    Insertion (A.Fils(Gauche), C);
 	 end if;	 
       else
 	 if A.Fils(Droite) = null then
@@ -45,9 +46,8 @@ package body ABR is
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	    
-	    return A.Fils(Droite);
 	 else 
-	    return Insertion (A.Fils(Droite), C);
+	    Insertion (A.Fils(Droite), C);
 	 end if;
       end if;      
       
@@ -57,13 +57,13 @@ package body ABR is
       new Ada.Unchecked_Deallocation(Noeud, Arbre);
    
    -- Supprime un noeud de valeur C dans l'arbre dont A est la racine      
-   procedure Suppression (A : in out Arbre; C : in Type_Clef) is
-      Max : Type_Clef;
+   procedure Suppression (A : in out Arbre; C : in Integer) is
+      Max : Integer;
       Fils : Arbre;
       
       -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
       -- dont A est la racine
-      procedure Sup_Max (A : in out Arbre; Max : out Type_Clef) is
+      procedure Sup_Max (A : in out Arbre; Max : out Integer) is
       begin 
 	 if A.Fils(Droite) = null then	    
 	    Max := A.C;
@@ -123,7 +123,7 @@ package body ABR is
    -- Return True si trouvé, False sinon
    -- Retourne aussi R, pointeur sur le noeud recherché
    procedure Recherche (A : in Arbre; 
-		       C : in Type_Clef;
+		       C : in Integer;
 		       R : out Arbre)  is
    begin
       if A = null then
@@ -283,63 +283,109 @@ package body ABR is
       
    end Noeuds_Voisins;
    
-   procedure Compte_Position (Cible : in Arbre; 
-			      Nb_Petits : out Natural;
-			      Nb_Grands : out Natural) is
-      Noeud_Courant : Noeud ;
-   begin
+--   procedure Compte_Position (Cible : in Arbre; 
+--			      Nb_Petits : out Natural;
+--			      Nb_Grands : out Natural) is
+--      Arbre_Courant : Arbre ;
+--   begin
       -- Initialisation des variables
-      Nb_Petits := 0 ;
-      Nb_Grands := 0 ;
-      Noeud_Courant := Cible.all ;
+--      Nb_Petits := 0 ;
+--      Nb_Grands := 0 ;
+--      Arbre_Courant := Cible ;
       
       -- Pour le nombre de noeuds de clef inférieure
-      if (Cible.all.Fils(Gauche) /= null) then 
-	 -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
-	 Nb_Petits := Nb_Petits + Cible.all.Fils(Gauche).all.Compte ;
-      end if ;      
       
-      while (Noeud_Courant.Pere /= null) loop -- On remonte
+--      if (Cible.all.Fils(Gauche) /= null) then  	 -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
+--	 Nb_Petits := Nb_Petits + Cible.all.Fils(Gauche).all.Compte ;
+--      end if ;      
+      
+--      while (Noeud_Courant.Pere /= null) loop            -- On remonte jusqu'à la racine
+--	 Noeud_Courant := Noeud_Courant.Pere.all ; 
 	 
-	 if Noeud_Courant.Pere.all.C > Cible.all.C then
+	 
+	 
+--	 if Noeud_Courant.Pere.all.C > Cible.all.C then
 	    -- On remonte au noeud père    
-	    Noeud_Courant := Noeud_Courant.Pere.all ; 
-	 else
-	    if Noeud_Courant.Pere.all.C /= Cible.all.C then
-	       Noeud_Courant := Noeud_Courant.Pere.all ;
-	       Nb_Petits := Nb_Petits + 1 ;
+--	    Noeud_Courant := Noeud_Courant.Pere.all ; 
+--	 else
+--	    if Noeud_Courant.Pere.all.C /= Cible.all.C then
+--	       Noeud_Courant := Noeud_Courant.Pere.all ;
+--	       Nb_Petits := Nb_Petits + 1 ;
 	       
-	       if (Cible.all.Fils(Gauche) /= null) then
-		  Nb_Petits := Nb_Petits + 
-		    Cible.all.Fils(Gauche).all.Compte ;
-	       end if ;
-	    end if;
-	 end if;
-      end loop ;
+--	       if (Cible.all.Fils(Gauche) /= null) then
+--		  Nb_Petits := Nb_Petits + 
+--		    Cible.all.Fils(Gauche).all.Compte ;
+--	       end if ;
+--	    end if;
+--	 end if;
+--    end loop ;
       
       -- Pour le nombre de noeuds de clef superieure      
-      if (Cible.all.Fils(Droite) /= null) then 
+--      if (Cible.all.Fils(Droite) /= null) then 
 	 -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
-	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
-      end if ;
+--	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
+--      end if ;
       
-      while (Noeud_Courant.Pere /= null) loop -- On remonte
+--      while (Noeud_Courant.Pere /= null) loop -- On remonte
 	 
-	 if (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
-	    Noeud_Courant := Noeud_Courant.Pere.all ;
-	    Nb_Grands := Nb_Grands + 1 ;
+--	 if (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
+--	    Noeud_Courant := Noeud_Courant.Pere.all ;
+--	    Nb_Grands := Nb_Grands + 1 ;
 	    
-	    if (Cible.all.Fils(Droite) /= null) then
-	       Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
-	    end if ;
+--	    if (Cible.all.Fils(Droite) /= null) then
+--	       Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
+--	    end if ;
 
-	 else
-	    if (Noeud_Courant.Pere.C /= Noeud_Courant.C) then
-	       Noeud_Courant := Noeud_Courant.Pere.all ;
-	    end if;
-	 end if;
-      end loop ;  
-   end Compte_Position;
-
+--	 else
+--	    if (Noeud_Courant.Pere.C /= Noeud_Courant.C) then
+--	       Noeud_Courant := Noeud_Courant.Pere.all ;
+--	    end if;
+--	 end if;
+--      end loop ;  
+--   end Compte_Position;
+   
+   procedure Compte_Position (Cible : in Arbre;
+			   Nb_Petits : out Natural;
+			   Nb_Grands : out Natural) is
+   Arbre_Courant : Arbre ;
+begin
+   
+   -- Initialisation des variables
+   Nb_Petits := 0 ;
+   Nb_Grands := 0 ;
+   Arbre_Courant := Cible ;
+   
+   if (Cible.all.Fils(Gauche) /= null) then -- On compte dans le sous-arbre Gauche
+      Nb_Petits := Nb_Petits + Cible.all.Fils(Gauche).all.Compte ;
+   end if ;
+   
+   if (Cible.all.Fils(Droite) /= null) then -- On compte dans le sous-arbre droit
+      Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
+   end if ;  
+   
+   while (Arbre_Courant.all.Pere /= null) loop -- On remonte
+	 
+      if (Arbre_Courant.all.Pere.all.C > Arbre_Courant.all.C) then-- On différencie les cas où l'on est à droite ou à gauche du père
+	 
+	 Arbre_Courant := Arbre_Courant.all.Pere ;
+	 Nb_Grands := Nb_Grands + 1 ;
+	 
+	 if (Cible.all.Fils(Droite) /= null) then 
+	    Nb_Grands := Nb_Grands + Arbre_Courant.all.Fils(Droite).all.Compte ;
+	 end if ;
+	 
+      else -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) 
+	   -- On ne regarde pas le cas d'égalité
+	 Arbre_Courant := Arbre_Courant.all.Pere ;
+	 Nb_Petits := Nb_Petits + 1 ;
+	 
+	 if (Cible.all.Fils(Gauche) /= null) then
+	    Nb_Petits := Nb_Petits + Arbre_Courant.all.Fils(Gauche).all.Compte ;
+	 end if ;
+	 
+      end if ;
+   end loop ;
+end Compte_Position ;
+   
    
 end ABR;
