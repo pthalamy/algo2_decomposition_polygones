@@ -82,7 +82,7 @@ procedure Decomposition_Polygones is
       	 if Liste.Length(T(I).Sortants) = 2 then
       	    R := True;
       	    S := (T(I).Pos, T(I).Pos);
-      	    N := Insertion (A, S);
+	    Insertion (A, S, N);
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
 	    Suppression (N, S);
@@ -97,14 +97,14 @@ procedure Decomposition_Polygones is
 	 -- Ajouter les segments qui commencent sur le point courant à l'ABR
 	 Seg_Cour := T(I).Sortants.Tete;
 	 while Seg_Cour /= null loop
-	    N := Insertion (A, Seg_Cour.Seg);
+	    Insertion (A, Seg_Cour.Seg, N);
 	    Seg_Cour := Seg_Cour.Suiv;
 	 end loop;
 	 
 	 if Liste.Length(T(I).Entrants) = 2 then
 	    R := True;
       	    S := (T(I).Pos, T(I).Pos);
-      	    N := Insertion (A, S);
+      	    Insertion (A, S, N );
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
 	    Suppression (N, S);
