@@ -6,6 +6,7 @@ with Ada.Unchecked_Deallocation;
 generic
    type Type_Clef is private;
    with function ">"(Left, Right : in Type_Clef) return Boolean is <>;
+   with procedure Put (X : in Type_Clef) is <>;
 package Generic_ABR is
          
    type Noeud;
@@ -20,7 +21,7 @@ package Generic_ABR is
    end record;
    type MAJ is range -1 .. 1;
    
-   procedure Insertion (A : in out Arbre; C : in Type_Clef);
+   procedure Insertion (A : in out Arbre; C : in Type_Clef; N : out Arbre);
    
    procedure Suppression (A : in out Arbre; C : in Type_Clef);
    

@@ -14,15 +14,19 @@ package body Generic_ABR is
    end MAJ_Voisinage;
    
    -- Insere un noeud de valeur C dans l'arbre dont A est la racine
-   -- Et retourne un pointeur sur son emplacement
-   function Insertion (A : in out Arbre; C : in Type_Clef) return Arbre is
+   -- Et retourne un pointeur sur son emplacement dans N
+   procedure Insertion (A : in out Arbre; 
+			C : in Type_Clef;
+			N : out Arbre) is
    begin
+      
       if A = null then
 	 A := new Noeud'(C => C, 
-			Fils => (others => null),
-			Pere => null,
+			 Fils => (others => null),
+			 Pere => null,
 			 Compte => 1);	 
-	 return A;
+	 N := A;
+	 return;
       end if;
       
       if A.C > C then
@@ -33,9 +37,9 @@ package body Generic_ABR is
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	    
-	    return A.Fils(Gauche);
+	    N := A.Fils(Gauche);
 	 else 
-	    return Insertion (A.Fils(Gauche), C);
+	    Insertion (A.Fils(Gauche), C, N);
 	 end if;	 
       else
 	 if A.Fils(Droite) = null then
@@ -45,9 +49,9 @@ package body Generic_ABR is
 					 Compte => 1);
 	    MAJ_Voisinage (A, 1);
 	    
-	    return A.Fils(Droite);
+	    N := A.Fils(Droite);
 	 else 
-	    return Insertion (A.Fils(Droite), C);
+	    Insertion (A.Fils(Droite), C, N);
 	 end if;
       end if;      
       
@@ -123,8 +127,8 @@ package body Generic_ABR is
    -- Return True si trouvé, False sinon
    -- Retourne aussi R, pointeur sur le noeud recherché
    procedure Recherche (A : in Arbre; 
-		       C : in Type_Clef;
-		       R : out Arbre)  is
+			C : in Type_Clef;
+			R : out Arbre)  is
    begin
       if A = null then
 	 R := null;
@@ -144,32 +148,32 @@ package body Generic_ABR is
    -- Affiche le noeud N sur Stdout
    procedure Put (N : Noeud) is
    begin
-      Put ("NYI");
-      --  Put (Integer'Image(Integer(N.C)) & " (");
+      --  Put ("NYI");
+      Put (N.C); Put (" (");
       
-      -- Affichage du voisinnage       
-      --  if N.Pere /= null then
-      --  	 Put (Integer'Image(Integer(N.Pere.C)) & ", ");
-      --  else
-      --  	 Put ("null, ");
-      --  end if;
+      --  Affichage du voisinnage       
+      if N.Pere /= null then
+      	 Put (N.Pere.C); Put (", ");
+      else
+      	 Put ("null, ");
+      end if;
       
-      --  if N.Fils(Gauche) /= null then
-      --  	 Put (Integer'Image(Integer(N.Fils(Gauche).C)) & ", ");
-      --  else
-      --  	 Put ("null, ");
-      --  end if;
+      if N.Fils(Gauche) /= null then
+      	 Put (N.Fils(Gauche).C); Put (", ");
+      else
+      	 Put ("null, ");
+      end if;
       
-      --  if N.Fils(Droite) /= null then
-      --  	 Put (Integer'Image(Integer(N.Fils(Droite).C)) & ")");
-      --  else
-      --  	 Put ("null)");
-      --  end if;
+      if N.Fils(Droite) /= null then
+      	 Put (N.Fils(Droite).C); Put (")");
+      else
+      	 Put ("null)");
+      end if;
       
       --  Affichage de la profondeur du sous-arbre      
-      --  Put (" || Depth : " & Integer'Image(Integer(N.Compte)));
+      Put (" || Depth : " & Integer'Image(N.Compte));
       
-      --  New_Line;
+      New_Line;
    end Put;
    
    -- Affiche l'arbre dont A est la racine sur stdout
@@ -252,7 +256,7 @@ package body Generic_ABR is
 	 if Cible.Pere /= null then
 	    Grand_Voisin := Cible.Pere ;
 	 elsif Cible.Pere = null then
-	    null ; -- Pas de noeud Sup
+	    Grand_Voisin := null ; -- Pas de noeud Sup
 	 end if ;
       end if ;
       
@@ -263,7 +267,7 @@ package body Generic_ABR is
 	 if Cible.Pere /= null then 
 	    
 	    if Cible.Pere.all.C > Cible.C then
-	       null ; -- Pas de noeud inferieur
+	       Grand_Voisin := Null ; -- Pas de noeud inferieur
 	    else
 	       if Cible.Pere.all.C /= Cible.C then
 		  Petit_Voisin := Cible.Pere ;
@@ -271,7 +275,7 @@ package body Generic_ABR is
 	    end if ;
 	    
 	 elsif Cible.Pere = null then
-	    null ; -- Pas de noeud inferieur
+	    Petit_Voisin := null ; -- Pas de noeud inferieur
 	 end if ;
 	 
       else -- Noeud_Cible.Fils(Gauche) /= null	 
@@ -286,60 +290,51 @@ package body Generic_ABR is
    procedure Compte_Position (Cible : in Arbre; 
 			      Nb_Petits : out Natural;
 			      Nb_Grands : out Natural) is
-      Noeud_Courant : Noeud ;
+      Arbre_Courant : Arbre ;
    begin
+      
       -- Initialisation des variables
       Nb_Petits := 0 ;
       Nb_Grands := 0 ;
-      Noeud_Courant := Cible.all ;
+      Arbre_Courant := Cible ;
       
-      -- Pour le nombre de noeuds de clef inférieure
       if (Cible.all.Fils(Gauche) /= null) then 
-	 -- On compte ceux qui sont dans le sous-arbre Gauche du noeud recherché
+	 -- On compte dans le sous-arbre Gauche
 	 Nb_Petits := Nb_Petits + Cible.all.Fils(Gauche).all.Compte ;
-      end if ;      
-      
-      while (Noeud_Courant.Pere /= null) loop -- On remonte
-	 
-	 if Noeud_Courant.Pere.all.C > Cible.all.C then
-	    -- On remonte au noeud père    
-	    Noeud_Courant := Noeud_Courant.Pere.all ; 
-	 else
-	    if Noeud_Courant.Pere.all.C /= Cible.all.C then
-	       Noeud_Courant := Noeud_Courant.Pere.all ;
-	       Nb_Petits := Nb_Petits + 1 ;
-	       
-	       if (Cible.all.Fils(Gauche) /= null) then
-		  Nb_Petits := Nb_Petits + 
-		    Cible.all.Fils(Gauche).all.Compte ;
-	       end if ;
-	    end if;
-	 end if;
-      end loop ;
-      
-      -- Pour le nombre de noeuds de clef superieure      
-      if (Cible.all.Fils(Droite) /= null) then 
-	 -- On compte ceux qui sont dans le sous-arbre Droit du noeud recherché
-	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
       end if ;
       
-      while (Noeud_Courant.Pere /= null) loop -- On remonte
+      if (Cible.all.Fils(Droite) /= null) then
+	 -- On compte dans le sous-arbre droit
+	 Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
+      end if ;  
+      
+      while (Arbre_Courant.all.Pere /= null) loop
+	 -- On remonte
 	 
-	 if (Noeud_Courant.Pere.all.C > Noeud_Courant.C) then
-	    Noeud_Courant := Noeud_Courant.Pere.all ;
+	 if (Arbre_Courant.all.Pere.all.C > Arbre_Courant.all.C) then
+	    -- On différencie les cas où l'on est à droite ou à gauche du père
+	    
+	    Arbre_Courant := Arbre_Courant.all.Pere ;
 	    Nb_Grands := Nb_Grands + 1 ;
 	    
-	    if (Cible.all.Fils(Droite) /= null) then
-	       Nb_Grands := Nb_Grands + Cible.all.Fils(Droite).all.Compte ;
+	    if (Cible.all.Fils(Droite) /= null) then 
+	       Nb_Grands := Nb_Grands + 
+		 Arbre_Courant.all.Fils(Droite).all.Compte ;
 	    end if ;
-
-	 else
-	    if (Noeud_Courant.Pere.C /= Noeud_Courant.C) then
-	       Noeud_Courant := Noeud_Courant.Pere.all ;
-	    end if;
-	 end if;
-      end loop ;  
+	    
+	 else 
+	    -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) 
+	    -- On ne regarde pas le cas d'égalité
+	    Arbre_Courant := Arbre_Courant.all.Pere ;
+	    Nb_Petits := Nb_Petits + 1 ;
+	    
+	    if (Cible.all.Fils(Gauche) /= null) then
+	       Nb_Petits := Nb_Petits + 
+		 Arbre_Courant.all.Fils(Gauche).all.Compte ;
+	    end if ;
+	    
+	 end if ;
+      end loop ;
    end Compte_Position;
 
-   
 end Generic_ABR;
