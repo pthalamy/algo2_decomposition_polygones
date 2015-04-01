@@ -89,14 +89,19 @@ package body Generic_ABR is
       else -- A.C < C ou A.C = C
 	 if A.C = C then -- A.C = C ?
 	    if A.Fils(Gauche) = null and A.Fils(Droite) = null then
-	       if A.C > A.Pere.C then
-		  A.Pere.Fils(Droite) := null;
+	       if A.Pere /= null then
+		  if A.C > A.Pere.C then
+		     A.Pere.Fils(Droite) := null;
+		  else
+		     A.Pere.Fils(Gauche) := null;
+		  end if;
+		  		  	       
+		  MAJ_Voisinage (A.Pere, -1);
+		  Free (A);	      
 	       else
-		  A.Pere.Fils(Gauche) := null;
+		  Free (A);	      
+		  A := null;
 	       end if;
-	       
-	       MAJ_Voisinage (A.Pere, -1);	    	    
-	       Free (A);
 	    elsif A.Fils(Gauche) = null then
 	       Fils := A.Fils(Droite);
 	       Fils.Pere := A.Pere;
