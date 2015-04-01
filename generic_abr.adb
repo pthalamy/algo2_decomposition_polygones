@@ -64,6 +64,8 @@ package body Generic_ABR is
    procedure Suppression (A : in out Arbre; C : in Type_Clef) is
       Max : Type_Clef;
       Fils : Arbre;
+      TROUVE : Boolean;
+      R : Arbre;
       
       -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
       -- dont A est la racine
@@ -84,47 +86,53 @@ package body Generic_ABR is
 	 return;
       end if;
       
-      if A.C > C then
-	 Suppression (A.Fils(Gauche), C);
-      else -- A.C < C ou A.C = C
-	 if A.C = C then -- A.C = C ?
-	    if A.Fils(Gauche) = null and A.Fils(Droite) = null then
-	       if A.Pere /= null then
-		  if A.C > A.Pere.C then
-		     A.Pere.Fils(Droite) := null;
+      Recherche(A, C, R, TROUVE) ;
+      
+      if TROUVE then
+	 if A.C > C then
+	    Suppression (A.Fils(Gauche), C);
+	 else -- A.C < C ou A.C = C
+	    if A.C = C then
+	       if A.Fils(Gauche) = null and A.Fils(Droite) = null then
+		  if A.Pere /= null then
+		     if A.C > A.Pere.C then
+			A.Pere.Fils(Droite) := null;
+		     else
+			A.Pere.Fils(Gauche) := null;
+		     end if;
+		     
+		     MAJ_Voisinage (A.Pere, -1);
+		     Free (A);	      
 		  else
-		     A.Pere.Fils(Gauche) := null;
+		     Free (A);	      
+		     A := null;
 		  end if;
-		  		  	       
+	       elsif A.Fils(Gauche) = null then
+		  Fils := A.Fils(Droite);
+		  Fils.Pere := A.Pere;
+		  Free (A);
+		  A := Fils;
+		  
 		  MAJ_Voisinage (A.Pere, -1);
-		  Free (A);	      
+	       elsif A.Fils(Droite) = null then
+		  Fils := A.Fils(Gauche);
+		  Fils.Pere := A.Pere;
+		  Free (A);
+		  A := Fils;	    
+		  
+		  MAJ_Voisinage (A.Pere, -1);
 	       else
-		  Free (A);	      
-		  A := null;
-	       end if;
-	    elsif A.Fils(Gauche) = null then
-	       Fils := A.Fils(Droite);
-	       Fils.Pere := A.Pere;
-	       Free (A);
-	       A := Fils;
-	       
-	       MAJ_Voisinage (A.Pere, -1);
-	    elsif A.Fils(Droite) = null then
-	       Fils := A.Fils(Gauche);
-	       Fils.Pere := A.Pere;
-	       Free (A);
-	       A := Fils;	    
-	       
-	       MAJ_Voisinage (A.Pere, -1);
-	    else
-	       Sup_Max (A.Fils(Gauche), Max);
-	       A.C := Max;
-	       MAJ_Voisinage (A, -1);		    
-	    end if;	    
-	 else -- A.C < C
-	    Suppression (A.Fils(Droite), C);		 
-	 end if;
-      end if;      
+		  Sup_Max (A.Fils(Gauche), Max);
+		  A.C := Max;
+		  MAJ_Voisinage (A, -1);		    
+	       end if;	    
+	    else -- A.C < C
+	       Suppression (A.Fils(Droite), C);		 
+	    end if;
+	 end if ;
+      else 
+	 Put_Line (Standard_Error, "suppression_error: Valeur non présente");   
+      end if;
    end Suppression;
    
    
@@ -133,8 +141,10 @@ package body Generic_ABR is
    -- Retourne aussi R, pointeur sur le noeud recherché
    procedure Recherche (A : in Arbre; 
 			C : in Type_Clef;
-			R : out Arbre)  is
+			R : out Arbre;
+			TROUVE : out Boolean)  is
    begin
+      TROUVE := False ;
       if A = null then
 	 R := null;
 	 return;
@@ -142,11 +152,12 @@ package body Generic_ABR is
       
       if A.C = C then
 	 R := A;
+	 TROUVE := True ;
 	 return;
       elsif A.C > C then
-	 Recherche (A.Fils(Gauche), C, R);		   
+	 Recherche (A.Fils(Gauche), C, R, TROUVE);		   
       else
-	 Recherche (A.Fils(Droite), C, R);
+	 Recherche (A.Fils(Droite), C, R, TROUVE);
       end if;
    end Recherche;   
    

@@ -27,7 +27,8 @@ package Generic_ABR is
    
    procedure Recherche (A : in Arbre; 
 			C : in Type_Clef;
-			R : out Arbre);
+			R : out Arbre;
+		        TROUVE : out Boolean);
    
    procedure Affichage (A : in Arbre);
 
