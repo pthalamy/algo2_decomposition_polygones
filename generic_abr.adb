@@ -248,7 +248,7 @@ package body Generic_ABR is
       Petit_Voisin := null;
       Grand_Voisin := null;
       
-      -- Grand_Voisin : soit le père, soit le premier fils à droite
+      -- Grand_Voisin : 
       
       if Cible.Fils(Droite) /= null then
 	 Cour := Cible.Fils(Droite);
@@ -258,24 +258,15 @@ package body Generic_ABR is
 	    Cour := Cour.Fils(Gauche);
 	 end loop;
       else
-	 -- Cible.Fils(Droite) = null
-	 -- On remonte le pere jusqu'à trouver un indice supérieur
-	 -- OU null
 	 Cour := Cible.Pere;
 	 loop
 	    Grand_Voisin := Cour;
 	    exit when Cour = null or else Cour.C > Cible.C;
 	    Cour := Cour.Pere;
 	 end loop;
-	 --  Cour := Cible;
-	 --  while Cour /= null and then not (Cour.C > Cible.C) loop
-	 --     Grand_Voisin := Cour.Pere;
-	 --     Cour := Cour.Pere;
-	 --  end loop;
       end if;
       
-      -- Petit_Voisin : soit le père, ça le dernier fils 
-      -- à droite du fils à gauche
+      -- Petit_Voisin : 
       
       if Cible.Fils(Gauche) /= null then
 	 Cour := Cible.Fils(Gauche);
@@ -291,10 +282,6 @@ package body Generic_ABR is
 	    exit when Cour = null or else not (Cour.C > Cible.C);
 	    Cour := Cour.Pere;
 	 end loop;
-
-	 --  if Cible.Pere /= null and then not (Cible.Pere.C > Cible.C) then
-	 --     Petit_Voisin := Cible.Pere;
-	 --  end if;
       end if;
       
    end Noeuds_Voisins;
