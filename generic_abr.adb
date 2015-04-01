@@ -251,41 +251,50 @@ package body Generic_ABR is
       -- Grand_Voisin : soit le père, soit le premier fils à droite
       
       if Cible.Fils(Droite) /= null then
-	 Grand_Voisin := Cible.Fils(Droite);	 
+	 Cour := Cible.Fils(Droite);
+	 loop
+	    Grand_Voisin := Cour;
+	    exit when Cour.Fils(Gauche) = null;
+	    Cour := Cour.Fils(Gauche);
+	 end loop;
       else
 	 -- Cible.Fils(Droite) = null
 	 -- On remonte le pere jusqu'à trouver un indice supérieur
 	 -- OU null
-	 Cour := Cible;
-	 while Cour /= null and then not (Cour.C > Cible.C) loop
-	    Grand_Voisin := Cour.Pere;
+	 Cour := Cible.Pere;
+	 loop
+	    Grand_Voisin := Cour;
+	    exit when Cour = null or else Cour.C > Cible.C;
 	    Cour := Cour.Pere;
-	 end loop;	 
+	 end loop;
+	 --  Cour := Cible;
+	 --  while Cour /= null and then not (Cour.C > Cible.C) loop
+	 --     Grand_Voisin := Cour.Pere;
+	 --     Cour := Cour.Pere;
+	 --  end loop;
       end if;
       
       -- Petit_Voisin : soit le père, ça le dernier fils 
       -- à droite du fils à gauche
       
-      if Cible.Fils(Gauche) = null then
-	 if Cible.Pere /= null then 
-	    
-	    if Cible.Pere.all.C > Cible.C then
-	       Grand_Voisin := Null; -- Pas de noeud inferieur
-	    else
-	       if Cible.Pere.all.C /= Cible.C then
-		  Petit_Voisin := Cible.Pere;
-	       end if;
-	    end if;
-	    
-	 elsif Cible.Pere = null then
-	    Petit_Voisin := null; -- Pas de noeud inferieur
-	 end if;
-	 
-      else -- Noeud_Cible.Fils(Gauche) /= null	 
-	 Petit_Voisin := Cible.Fils(Gauche);
-	 while Petit_Voisin.Fils(Droite) /= null loop
-	    Petit_Voisin := Petit_Voisin.Fils(Droite);
+      if Cible.Fils(Gauche) /= null then
+	 Cour := Cible.Fils(Gauche);
+	 loop
+	    Petit_Voisin := Cour;
+	    exit when Cour.Fils(Droite) = null;
+	    Cour := Cour.Fils(Droite);
 	 end loop;
+      else
+	 Cour := Cible.Pere;
+	 loop
+	    Petit_Voisin := Cour;
+	    exit when Cour = null or else not (Cour.C > Cible.C);
+	    Cour := Cour.Pere;
+	 end loop;
+
+	 --  if Cible.Pere /= null and then not (Cible.Pere.C > Cible.C) then
+	 --     Petit_Voisin := Cible.Pere;
+	 --  end if;
       end if;
       
    end Noeuds_Voisins;
