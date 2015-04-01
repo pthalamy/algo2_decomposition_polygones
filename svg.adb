@@ -18,18 +18,18 @@ package body Svg is
    end Code_Couleur;
    
    -- Dessine une ligne A -- B
-   procedure Svg_Line (A, B : in Sommet; 
+   procedure Svg_Line (A, B : in Position; 
 		       C: in Color)
    is
    begin
       Put (Svg_Out, "<line x1=""");
-      Put (Svg_Out, A.Pos.X);
+      Put (Svg_Out, A.X);
       Put (Svg_Out, """ y1=""");
-      Put (Svg_Out, A.Pos.Y);
+      Put (Svg_Out, A.Y);
       Put (Svg_Out, """ x2=""");
-      Put (Svg_Out, B.Pos.X);
+      Put (Svg_Out, B.X);
       Put (Svg_Out, """ y2=""");
-      Put (Svg_Out, B.Pos.Y);
+      Put (Svg_Out, B.Y);
       Put (Svg_Out, """ style=""stroke:");
       Put (Svg_Out, Code_Couleur(C));
       Put_Line (Svg_Out, ";stroke-width:0.1""/>");
@@ -61,14 +61,24 @@ package body Svg is
             
       -- Tracé du polygone
       for I in T.all'First..(T.all'Last - 1) loop	 
-	 Svg_Line (T(I), T(I + 1), Bleu);
+	 Svg_Line (T(I).Pos, T(I + 1).Pos, Bleu);
       end loop;
       
-      Svg_Line (T(T.all'Last), T(T.all'First), Bleu);
+      Svg_Line (T(T.all'Last).Pos, T(T.all'First).Pos, Bleu);                  
+   end Trace_Polygone;
+   
+   procedure Trace_Segments (Segs : in Liste_Segments) is
+      Seg_Cour : Cell_Ptr;   
+   begin
+      Seg_Cour := Segs.Tete;
+      while Seg_Cour /= null loop
+	 Svg_Line (Seg_Cour.Seg.A, Seg_Cour.Seg.B, Vert);
+	 Seg_Cour := Seg_Cour.Suiv;
+      end loop;
       
       Svg_Footer;
       
       Close (Svg_Out);
-   end Trace_Polygone;
+   end Trace_Segments;
    
 end Svg;

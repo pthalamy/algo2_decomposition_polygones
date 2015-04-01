@@ -10,7 +10,8 @@ procedure Decomposition_Polygones is
    Args_Invalides : exception;
    Nb_Sommets : Natural;
    T : TSom_Ptr := null;
-      
+   Segs : Liste_Segments;
+   
    procedure Init_Segments(T : TSom_Ptr) is
    begin
       for I in T.all'First..(T.all'Last - 1) loop	 
@@ -69,7 +70,27 @@ procedure Decomposition_Polygones is
 					     Element_Type => Sommet, 
 					     Array_Type => Tab_Sommets);
    
-   procedure Parcours_Sommets(T : in TSom_Ptr; A : in out Arbre) is
+   function Point_De_Connexion (P : Position;
+				S : Segment) return Position is
+      A : Float; -- Coefficient directeur de S
+      B : Float; -- Ordonnée à l'origine de S
+      I : Position; -- Le point d'intersection des deux segments
+   begin
+      --  Calcule Le coefficient directeur de S
+      A := (S.B.Y - S.A.Y) / (S.B.X - S.A.X);
+      B := S.B.Y - A * S.B.X;
+      
+      -- Calcul de l'ordonnée du point d'intersection de la verticale
+      -- passant par P et de S
+      I.Y := A * P.X + B;
+      I.X := (P.X);
+            
+      return I;
+   end Point_De_Connexion;   
+   
+   procedure Parcours_Sommets(T : in TSom_Ptr; 
+			      Segs : in out Liste_Segments) is
+      A : Arbre;
       R : Boolean := False;
       S : Segment;
       N : Arbre;
@@ -77,6 +98,7 @@ procedure Decomposition_Polygones is
       C_Petit, C_Grand : Natural;
       
       Seg_Cour : Cell_Ptr;
+      New_Seg : Segment;
    begin 
       for I in T'Range loop
       	 if Liste.Length(T(I).Sortants) = 2 then
@@ -112,15 +134,15 @@ procedure Decomposition_Polygones is
 	 
 	 if R then
 	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
-	       -- TODO:
-	       -- Reconnecter le point verticalement aux segments voisins
-	       -- Afficher les segments ajoutés sur STDOUT	       
-	       null;
+	       -- Calcul du point de rencontre avec le segment inf
+	       New_Seg := (T(I).Pos, Point_De_Connexion (T(I).Pos, V_Petit.C));
+	       Liste.Enqueue (Segs, New_Seg);
+	       -- Calcul du point de rencontre avec le segment sup
+	       New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C), T(I).Pos);
+	       Liste.Enqueue (Segs, New_Seg);
 	    end if;
 	 end if;
       end loop;
-      
-      null;
    end Parcours_Sommets;
    
 begin
@@ -134,9 +156,10 @@ begin
    
    Init_Segments (T);
    TriParAbsisseCroissante (T.all);
-   Affichage_Sommets (T);   
+   Parcours_Sommets (T, Segs);
    
    Svg.Trace_Polygone (Argument(2), T);
+   Svg.Trace_Segments (Segs);
    
 exception
    when Args_Invalides =>
