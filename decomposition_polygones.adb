@@ -99,26 +99,34 @@ procedure Decomposition_Polygones is
       
       Seg_Cour : Cell_Ptr;
       New_Seg : Segment;
-   begin 
+   begin       
       for I in T'Range loop
+	 Put_Line ("Traitement du point: " & Integer'Image(I));	      
+	 
       	 if Liste.Length(T(I).Sortants) = 2 then
       	    R := True;
       	    S := (T(I).Pos, T(I).Pos);
 	    Insertion (A, S, N);
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
-	    Suppression (N, S);
+	    Suppression (A, S);
 	 end if;
 	 
 	 -- Enlever les segments qui terminent sur le point courant de l'ABR
-	 Seg_Cour := T(I).Entrants.Tete;
+	 Put_Line ("    Sup entrants: " 
+		     & Integer'Image(Liste.Length(T(I).Entrants)));
+	 Seg_Cour := T(I).Entrants.Tete;	 
 	 while Seg_Cour /= null loop
+	    Put ("    Suppression de : "); Put (Seg_Cour.Seg); New_Line;
 	    Suppression (A, Seg_Cour.Seg);
 	    Seg_Cour := Seg_Cour.Suiv;
 	 end loop;
 	 -- Ajouter les segments qui commencent sur le point courant à l'ABR
+	 Put_Line ("    Sup sortants: "
+		     & Integer'Image(Liste.Length(T(I).Sortants)));
 	 Seg_Cour := T(I).Sortants.Tete;
 	 while Seg_Cour /= null loop
+	    Put ("    Insertion de : "); Put (Seg_Cour.Seg); New_Line;
 	    Insertion (A, Seg_Cour.Seg, N);
 	    Seg_Cour := Seg_Cour.Suiv;
 	 end loop;
@@ -129,17 +137,22 @@ procedure Decomposition_Polygones is
       	    Insertion (A, S, N );
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
-	    Suppression (N, S);
+	    Suppression (A, S);
 	 end if;
 	 
 	 if R then
 	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
-	       -- Calcul du point de rencontre avec le segment inf
-	       New_Seg := (T(I).Pos, Point_De_Connexion (T(I).Pos, V_Petit.C));
-	       Liste.Enqueue (Segs, New_Seg);
-	       -- Calcul du point de rencontre avec le segment sup
-	       New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C), T(I).Pos);
-	       Liste.Enqueue (Segs, New_Seg);
+	       Put_Line ("Segment à tracer !");
+	       if V_Petit /= null then
+		  -- Calcul du point de rencontre avec le segment inf
+		  New_Seg := (T(I).Pos, Point_De_Connexion (T(I).Pos, V_Petit.C));
+		  Liste.Enqueue (Segs, New_Seg);
+	       end if;
+	       if V_Grand /= null then			  
+		  -- Calcul du point de rencontre avec le segment sup
+		  New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C), T(I).Pos);
+		  Liste.Enqueue (Segs, New_Seg);
+	       end if;
 	    end if;
 	 end if;
       end loop;
@@ -155,10 +168,11 @@ begin
    Put_Line ("Nombre de sommets : " & Integer'Image(Nb_Sommets));
    
    Init_Segments (T);
+   Svg.Trace_Polygone (Argument(2), T);
+   
    TriParAbsisseCroissante (T.all);
    Parcours_Sommets (T, Segs);
    
-   Svg.Trace_Polygone (Argument(2), T);
    Svg.Trace_Segments (Segs);
    
 exception
