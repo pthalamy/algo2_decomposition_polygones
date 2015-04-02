@@ -8,7 +8,7 @@ generic
    with function ">"(Left, Right : in Type_Clef) return Boolean is <>;
    with procedure Put (X : in Type_Clef) is <>;
 package Generic_ABR is
-         
+   
    type Noeud;
    type Arbre is access Noeud;
    type Direction is (Gauche , Droite);
@@ -27,8 +27,7 @@ package Generic_ABR is
    
    procedure Recherche (A : in Arbre; 
 			C : in Type_Clef;
-			R : out Arbre;
-		        TROUVE : out Boolean);
+			R : out Arbre);
    
    procedure Affichage (A : in Arbre);
 
