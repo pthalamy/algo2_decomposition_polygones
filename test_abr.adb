@@ -27,6 +27,7 @@ begin
       A : Arbre := null;
       R : Arbre;
       N : Arbre;
+      TROUVE : Boolean;
       
       Vinf, VSup : Natural;
       
@@ -52,7 +53,7 @@ begin
 	 Put_Line ("Recherche et compte de voisins de : " 
 		     & Integer'Image(Elements(I)));
 	 	 
-	 Recherche (A, Elements(I), R);
+	 Recherche (A, Elements(I), R, TROUVE);
 
 	 Compte_Position (R, VInf, VSup);
 	 Put_Line ("Nb voisins inf: " & Integer'Image(VInf));
@@ -93,5 +94,19 @@ begin
       --  	 Put_Line ("Introuvable");
       --  end if;
       
-   end;      
+      
+      
+      
+      -- Test Suppr :
+      
+      for I in Elements'Range loop
+	 New_Line;
+	 Put_Line ("Suppression de : " 
+		     & Integer'Image(Elements(I)));
+	 	 
+	 Suppression (A, Elements(I));
+	 Affichage(A);
+	 
+      end loop;
+   end ;
 end Test_ABR;
