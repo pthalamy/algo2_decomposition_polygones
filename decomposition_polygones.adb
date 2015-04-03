@@ -99,7 +99,7 @@ procedure Decomposition_Polygones is
    procedure Parcours_Sommets(T : in TSom_Ptr; 
 			      Segs : in out Liste_Segments) is
       A : Arbre;
-      R : Boolean := False;
+      R : Boolean;
       S : Segment;
       N : Arbre;
       V_Petit, V_Grand : Arbre;
@@ -110,6 +110,7 @@ procedure Decomposition_Polygones is
    begin       
       for I in T'Range loop
 	 Put_Line ("Traitement du point: " & T(I).Nom);	      
+	 R := False;	 
 	 
 	 Affichage (A);
 	 

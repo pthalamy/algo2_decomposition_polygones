@@ -69,12 +69,16 @@ package body Generic_ABR is
       begin 
 	 if A.Fils(Droite) = null then	    
 	    Max := A.C;
+	    if A.Fils(Gauche) /= null then
+	       Fils := A.Fils(Gauche);
+	       Fils.Pere := A.Pere;
+	    end if;
 	    
 	    MAJ_Voisinage (A.Pere, -1);
 	    
 	    Free (A);
 	    
-	    A := null;
+	    A := Fils;
 	 else
 	    Sup_Max (A.Fils(Droite), Max);	    	    
 	 end if;
@@ -85,9 +89,6 @@ package body Generic_ABR is
 	 Put_Line (Standard_Error, "suppression_error: Valeur non présente");
 	 return;
       end if;
-      
-      Put ("R = "); Put (C); New_Line;
-      Put ("Courant = "); Put (A.C); New_Line;
       
       if A.C = C then
 	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
@@ -120,6 +121,7 @@ package body Generic_ABR is
 	    MAJ_Voisinage (A.Pere, -1);
 	 else
 	    Sup_Max (A.Fils(Gauche), Max);
+	    Put ("     Sup_Max = "); Put(Max); New_Line;
 	    A.C := Max;
 	 end if;	    
       elsif A.C > C then
