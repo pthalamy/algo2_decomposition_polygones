@@ -11,5 +11,8 @@
 test_abr
 decomposition_polygones
 
+# Svg outputs
+out.svg
+
 \#*
 .#*
