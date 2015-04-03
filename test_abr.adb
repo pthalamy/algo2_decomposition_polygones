@@ -48,32 +48,32 @@ begin
       --  Put_Line ("Nombre à rechercher :");
       --  Get (Integer(ClefAR));
       
-      for I in Elements'Range loop
-	 New_Line;
-	 Put_Line ("Recherche et compte de voisins de : " 
-		     & Integer'Image(Elements(I)));
+      --  for I in Elements'Range loop
+      --  	 New_Line;
+      --  	 Put_Line ("Recherche et compte de voisins de : " 
+      --  		     & Integer'Image(Elements(I)));
 	 	 
-	 Recherche (A, Elements(I), R, TROUVE);
+      --  	 Recherche (A, Elements(I), R);
 
-	 Compte_Position (R, VInf, VSup);
-	 Put_Line ("Nb voisins inf: " & Integer'Image(VInf));
-	 Put_Line ("Nb voisins sup: " & Integer'Image(VSup));
+      --  	 Compte_Position (R, VInf, VSup);
+      --  	 Put_Line ("Nb voisins inf: " & Integer'Image(VInf));
+      --  	 Put_Line ("Nb voisins sup: " & Integer'Image(VSup));
 	 
-	 Noeuds_Voisins (R, PVoisin, GVoisin);
+      --  	 Noeuds_Voisins (R, PVoisin, GVoisin);
 	 
-	 if PVoisin /= null then
-	    Put_Line ("Petit voisin: " & Integer'Image(PVoisin.C));
-	 else
-	    Put_Line ("Petit voisin: " & "null");
-	 end if;
+      --  	 if PVoisin /= null then
+      --  	    Put_Line ("Petit voisin: " & Integer'Image(PVoisin.C));
+      --  	 else
+      --  	    Put_Line ("Petit voisin: " & "null");
+      --  	 end if;
 	 
-	 if GVoisin /= null then
-	    Put_Line ("Grand voisin: " & Integer'Image(GVoisin.C));
-	 else 
-	    Put_Line ("Grand voisin: " & "null");		    
-	 end if;
+      --  	 if GVoisin /= null then
+      --  	    Put_Line ("Grand voisin: " & Integer'Image(GVoisin.C));
+      --  	 else 
+      --  	    Put_Line ("Grand voisin: " & "null");		    
+      --  	 end if;
 	 
-      end loop;
+      --  end loop;
           
       --  Put_Line ("Nombre à rechercher :");
       --  Get (Integer(R));
@@ -99,14 +99,14 @@ begin
       
       -- Test Suppr :
       
-      for I in Elements'Range loop
-	 New_Line;
-	 Put_Line ("Suppression de : " 
-		     & Integer'Image(Elements(I)));
+      --  for I in Elements'Range loop
+      --  	 New_Line;
+      --  	 Put_Line ("Suppression de : " 
+      --  		     & Integer'Image(Elements(I)));
 	 	 
-	 Suppression (A, Elements(I));
-	 Affichage(A);
+      --  	 Suppression (A, Elements(I));
+      --  	 Affichage(A);
 	 
-      end loop;
+      --  end loop;
    end ;
 end Test_ABR;

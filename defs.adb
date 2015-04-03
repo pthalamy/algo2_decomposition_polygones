@@ -8,7 +8,7 @@ package body Defs is
    
    procedure Put (S : Segment) is
    begin
-      Put (" [" & Point2Str (S.A) & ", " & Point2Str (S.B) & "]");
+      Put (" [" & S.A.Nom & ", " & S.B.Nom & "]");
    end Put;
    
    -- Return True is S1 "au-dessus de" S2
@@ -16,8 +16,8 @@ package body Defs is
    function ">"(S1, S2 : in Segment) return Boolean is
    begin
       -- Compare la valeur moyenne de l'ordonnée du segment
-      return ((S1.A.Y + S1.B.Y) / 2.0) > 
-	((S2.A.Y + S2.B.Y) / 2.0);
+      return ((S1.A.Pos.Y + S1.B.Pos.Y) / 2.0) > 
+	((S2.A.Pos.Y + S2.B.Pos.Y) / 2.0);
    end ">";   
    
 end Defs;

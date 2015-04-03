@@ -13,32 +13,38 @@ procedure Decomposition_Polygones is
    Segs : Liste_Segments;
    
    procedure Init_Segments(T : TSom_Ptr) is
+      Nom : Character := 'A';
    begin
-      for I in T.all'First..(T.all'Last - 1) loop	 
+      for I in T.all'Range loop
+	 T(I).Nom := Nom;
+	 Nom := Character'Val(Character'Pos(Nom) + 1);
+      end loop;
+      
+      for I in T.all'First..(T.all'Last - 1) loop
 	 if T(I).Pos.X < T(I + 1).Pos.X then
-	    Liste.Enqueue (T(I).Sortants, (T(I).Pos, T(I+1).Pos));
-	    Liste.Enqueue (T(I+1).Entrants, (T(I).Pos, T(I+1).Pos));
+	    Liste.Enqueue (T(I).Sortants, (T(I), T(I+1)));
+	    Liste.Enqueue (T(I+1).Entrants, (T(I), T(I+1)));
 	 else
-	    Liste.Enqueue (T(I).Entrants, (T(I+1).Pos, T(I).Pos));
-	    Liste.Enqueue (T(I+1).Sortants, (T(I+1).Pos, T(I).Pos));
+	    Liste.Enqueue (T(I).Entrants, (T(I+1), T(I)));
+	    Liste.Enqueue (T(I+1).Sortants, (T(I+1), T(I)));
 	 end if;
       end loop;
       
       -- Prise en compte du segment entre le dernier et premier point
       if T(T.all'Last).Pos.X < T(T.all'First).Pos.X then
 	 Liste.Enqueue (T(T.all'Last).Sortants, 
-			(T(T.all'Last).Pos, 
-			 T(T.all'First).Pos));
+			(T(T.all'Last), 
+			 T(T.all'First)));
 	 Liste.Enqueue (T(T.all'First).Entrants, 
-			(T(T.all'Last).Pos, 
-			 T(T.all'First).Pos));
+			(T(T.all'Last), 
+			 T(T.all'First)));
       else
 	 Liste.Enqueue (T(T.all'Last).Entrants, 
-			(T(T.all'First).Pos, 
-			 T(T.all'Last).Pos));
+			(T(T.all'First), 
+			 T(T.all'Last)));
 	 Liste.Enqueue (T(T.all'First).Sortants, 
-			(T(T.all'First).Pos, 
-			 T(T.all'Last).Pos));		 
+			(T(T.all'First), 
+			 T(T.all'Last)));		 
       end if;
    end Init_Segments;
    
@@ -71,19 +77,21 @@ procedure Decomposition_Polygones is
 					     Array_Type => Tab_Sommets);
    
    function Point_De_Connexion (P : Position;
-				S : Segment) return Position is
+				S : Segment) return Sommet is
       A : Float; -- Coefficient directeur de S
       B : Float; -- Ordonnée à l'origine de S
-      I : Position; -- Le point d'intersection des deux segments
+      I : Sommet; -- Le point d'intersection des deux segments
    begin
       --  Calcule Le coefficient directeur de S
-      A := (S.B.Y - S.A.Y) / (S.B.X - S.A.X);
-      B := S.B.Y - A * S.B.X;
+      A := (S.B.Pos.Y - S.A.Pos.Y) / (S.B.Pos.X - S.A.Pos.X);
+      B := S.B.Pos.Y - A * S.B.Pos.X;
       
       -- Calcul de l'ordonnée du point d'intersection de la verticale
       -- passant par P et de S
-      I.Y := A * P.X + B;
-      I.X := (P.X);
+      I.Pos.Y := A * P.X + B;
+      I.Pos.X := (P.X);
+      
+      I.Nom := 'X';
             
       return I;
    end Point_De_Connexion;   
@@ -101,11 +109,13 @@ procedure Decomposition_Polygones is
       New_Seg : Segment;
    begin       
       for I in T'Range loop
-	 Put_Line ("Traitement du point: " & Integer'Image(I));	      
+	 Put_Line ("Traitement du point: " & T(I).Nom);	      
+	 
+	 Affichage (A);
 	 
       	 if Liste.Length(T(I).Sortants) = 2 then
       	    R := True;
-      	    S := (T(I).Pos, T(I).Pos);
+      	    S := (T(I), T(I));
 	    Insertion (A, S, N);
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
@@ -118,6 +128,7 @@ procedure Decomposition_Polygones is
 	 Seg_Cour := T(I).Entrants.Tete;	 
 	 while Seg_Cour /= null loop
 	    Put ("    Suppression de : "); Put (Seg_Cour.Seg); New_Line;
+	    Affichage(A);
 	    Suppression (A, Seg_Cour.Seg);
 	    Seg_Cour := Seg_Cour.Suiv;
 	 end loop;
@@ -133,7 +144,7 @@ procedure Decomposition_Polygones is
 	 
 	 if Liste.Length(T(I).Entrants) = 2 then
 	    R := True;
-      	    S := (T(I).Pos, T(I).Pos);
+      	    S := (T(I), T(I));
       	    Insertion (A, S, N );
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
@@ -142,15 +153,18 @@ procedure Decomposition_Polygones is
 	 
 	 if R then
 	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
-	       Put_Line ("Segment à tracer !");
 	       if V_Petit /= null then
 		  -- Calcul du point de rencontre avec le segment inf
-		  New_Seg := (T(I).Pos, Point_De_Connexion (T(I).Pos, V_Petit.C));
+		  New_Seg := (T(I), 
+			      Point_De_Connexion (T(I).Pos, V_Petit.C));
+		  Put ("! Trace Segment : "); Put (New_Seg); New_Line;
 		  Liste.Enqueue (Segs, New_Seg);
 	       end if;
-	       if V_Grand /= null then			  
+	       if V_Grand /= null then
 		  -- Calcul du point de rencontre avec le segment sup
-		  New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C), T(I).Pos);
+		  New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C), 
+			      T(I));
+		  Put ("! Trace Segment : "); Put (New_Seg); New_Line;
 		  Liste.Enqueue (Segs, New_Seg);
 	       end if;
 	    end if;

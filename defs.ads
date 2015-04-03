@@ -18,13 +18,14 @@ package Defs is
    end record;
    
    type Sommet is record 
+      Nom : Character;
       Pos : Position;
       Entrants : Liste_Segments;
       Sortants : Liste_Segments;
    end record;
    
    type Segment is record
-      A, B : Position;
+      A, B : Sommet;
    end record;
    
    type Cellule is record

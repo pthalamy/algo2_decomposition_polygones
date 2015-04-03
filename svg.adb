@@ -72,7 +72,7 @@ package body Svg is
    begin
       Seg_Cour := Segs.Tete;
       while Seg_Cour /= null loop
-	 Svg_Line (Seg_Cour.Seg.A, Seg_Cour.Seg.B, Vert);
+	 Svg_Line (Seg_Cour.Seg.A.Pos, Seg_Cour.Seg.B.Pos, Vert);
 	 Seg_Cour := Seg_Cour.Suiv;
       end loop;
       

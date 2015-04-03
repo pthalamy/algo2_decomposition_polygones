@@ -86,6 +86,9 @@ package body Generic_ABR is
 	 return;
       end if;
       
+      Put ("R = "); Put (C); New_Line;
+      Put ("Courant = "); Put (A.C); New_Line;
+      
       if A.C = C then
 	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
 	    if A.Pere /= null then
