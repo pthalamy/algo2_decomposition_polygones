@@ -92,19 +92,12 @@ package body Generic_ABR is
       
       if A.C = C then
 	 if A.Fils(Gauche) = null and A.Fils(Droite) = null then
-	    if A.Pere /= null then
-	       if A.C > A.Pere.C then
-		  A.Pere.Fils(Droite) := null;
-	       else
-		  A.Pere.Fils(Gauche) := null;
-	       end if;
-	       
+	    if A.Pere /= null then	       	       
 	       MAJ_Voisinage (A.Pere, -1);
-	       Free (A);	      
-	    else
-	       Free (A);	      
-	       A := null;
 	    end if;
+	    
+	    Free (A);	      
+	    A := null;	   
 	 elsif A.Fils(Gauche) = null then
 	    Fils := A.Fils(Droite);
 	    Fils.Pere := A.Pere;
@@ -207,48 +200,32 @@ package body Generic_ABR is
    -- Affiche le code d'export au format dot du graph dont A est la racine 
    -- sur stdout
    procedure Export_Dot (A : in Arbre) is
-      Dot_Out_Str : String(1..15);
-      Last : Integer;
-      Dot_Out : File_Type;      
       
       procedure Export_Dot_Rec (SA : in Arbre) is
       begin
-	 Put ("NYI");
-	 --  if SA = null then
-	 --     return;
-	 --  end if;
+	 if SA = null then
+	    return;
+	 end if;
 	 
-	 --  if SA.Fils(Gauche) /= null then
-	 --     Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
-	 --  		& " -- " 
-	 --  		& Integer'Image(Integer(SA.Fils(Gauche).C))
-	 --  	     );
-	 --     Export_Dot_Rec (SA.Fils(Gauche));
-	 --  end if;
+	 if SA.Fils(Gauche) /= null then
+	    Put (SA.C); Put (" -- "); Put (SA.Fils(Gauche).C);
+	    Export_Dot_Rec (SA.Fils(Gauche));
+	 end if;
 	 
-	 --  if SA.Fils(Droite) /= null then
-	 --     Put_Line (Dot_Out, Integer'Image(Integer(SA.C))
-	 --  		& " -- " 
-	 --  		& Integer'Image(Integer(SA.Fils(Droite).C))
-	 --  	     );
-	 --     Export_Dot_Rec (SA.Fils(Droite));
-	 --  end if;
+	 if SA.Fils(Droite) /= null then
+	    Put (SA.C); Put (" -- "); Put (SA.Fils(Droite).C);
+	    Export_Dot_Rec (SA.Fils(Droite));
+	 end if;
       end Export_Dot_Rec;
       
    begin
       Put_Line ("=== Export .dot ===");
-      Put_Line ("Nom du fichier d'export : ");
-      Get_Line (Dot_Out_Str, Last);
-      
-      Create (File => Dot_Out,
-              Mode => Out_File,
-              Name => Dot_Out_Str);
-      
-      Put_Line (Dot_Out, "graph mon_graphe {");
+            
+      Put_Line ("graph mon_graphe {");
       
       Export_Dot_Rec (A);
       
-      Put_Line (Dot_Out, "}");		  
+      Put_Line ("}");		  
    end Export_Dot;
    
    procedure Noeuds_Voisins (Cible : in Arbre; 
