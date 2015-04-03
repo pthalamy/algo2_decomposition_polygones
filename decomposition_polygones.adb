@@ -65,7 +65,7 @@ procedure Decomposition_Polygones is
    
    -- Fonction nécessaire à l'instantiation de Generic_Array_Sort 
    -- Compare deux éléments du tableau pour son tri croissant
-   function "<" (A, B : Sommet) return Boolean is
+   function "<" (A, B : Som_Ptr) return Boolean is
    begin
       return  A.Pos.X < B.Pos.X;
    end "<";
@@ -73,14 +73,14 @@ procedure Decomposition_Polygones is
    -- Instanciation du package generic sort de la bibliothèque standard Ada
    procedure TriParAbsisseCroissante is 
       new Ada.Containers.Generic_Array_Sort (Index_Type => Natural, 
-					     Element_Type => Sommet, 
+					     Element_Type => Som_Ptr, 
 					     Array_Type => Tab_Sommets);
    
    function Point_De_Connexion (P : Position;
-				S : Segment) return Sommet is
+				S : Segment) return Som_Ptr is
       A : Float; -- Coefficient directeur de S
       B : Float; -- Ordonnée à l'origine de S
-      I : Sommet; -- Le point d'intersection des deux segments
+      I : Som_Ptr := new Sommet; -- Le point d'intersection des deux segments
    begin
       --  Calcule Le coefficient directeur de S
       A := (S.B.Pos.Y - S.A.Pos.Y) / (S.B.Pos.X - S.A.Pos.X);
@@ -128,7 +128,6 @@ procedure Decomposition_Polygones is
 	 Seg_Cour := T(I).Entrants.Tete;	 
 	 while Seg_Cour /= null loop
 	    Put ("    Suppression de : "); Put (Seg_Cour.Seg); New_Line;
-	    Affichage(A);
 	    Suppression (A, Seg_Cour.Seg);
 	    Seg_Cour := Seg_Cour.Suiv;
 	 end loop;

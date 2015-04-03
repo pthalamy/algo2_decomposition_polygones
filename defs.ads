@@ -24,8 +24,9 @@ package Defs is
       Sortants : Liste_Segments;
    end record;
    
+   type Som_Ptr is access Sommet;
    type Segment is record
-      A, B : Sommet;
+      A, B : Som_Ptr;
    end record;
    
    type Cellule is record
@@ -42,7 +43,7 @@ package Defs is
    
    -- Types de stockage
    
-   type Tab_Sommets is array(Natural range <>) of Sommet;
+   type Tab_Sommets is array(Natural range <>) of Som_Ptr;
    type TSom_Ptr is access Tab_Sommets;
    
    function Point2Str (P : Position) return String;   

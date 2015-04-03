@@ -18,6 +18,7 @@ package body Parseur is
       
       -- Lecture des coordonnées des sommets
       for I in T.all'range loop
+	 T.all(I) := new Sommet;
 	 Get (Fichier_In, T.all(I).Pos.X);
 	 Get (Fichier_In, T.all(I).Pos.Y);
       end loop;

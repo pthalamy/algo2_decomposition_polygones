@@ -62,7 +62,7 @@ package body Generic_ABR is
    procedure Suppression (A : in out Arbre; C : in Type_Clef) is
       Max : Type_Clef;
       Fils : Arbre;
-      
+            
       -- Retourne la valeur la plus grande rencontrée dans le sous-arbre
       -- dont A est la racine
       procedure Sup_Max (A : in out Arbre; Max : out Type_Clef) is
