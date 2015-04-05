@@ -8,7 +8,6 @@ use Defs;
 
 procedure Decomposition_Polygones is
    Args_Invalides : exception;
-   Nb_Sommets : Natural;
    T : TSom_Ptr := null;
    Segs : Liste_Segments;      
 begin
@@ -16,7 +15,7 @@ begin
       raise Args_Invalides;
    end if;  
    
-   Parseur.Lecture (Argument(1), Nb_Sommets, T);         
+   Parseur.Lecture (Argument(1), T);         
    
    Traitement.Init_Segments (T);
    

@@ -2,10 +2,10 @@
 package body Parseur is
       
    procedure Lecture (Fichier_In_Str : in String;
-		      Nb_Sommets : out Natural;
 		      T : out TSom_Ptr)
    is
-      Fichier_In : File_Type;            
+      Fichier_In : File_Type;
+      Nb_Sommets : Natural;
    begin
       Open (File => Fichier_In,
             Mode => In_File,
