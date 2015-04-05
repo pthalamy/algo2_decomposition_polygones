@@ -114,7 +114,7 @@ package body Generic_ABR is
 	    MAJ_Voisinage (A.Pere, -1);
 	 else
 	    Sup_Max (A.Fils(Gauche), Max);
-	    Put ("     Sup_Max = "); Put(Max); New_Line;
+	    --  Put ("     Sup_Max = "); Put(Max); New_Line;
 	    A.C := Max;
 	 end if;	    
       elsif A.C > C then

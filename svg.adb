@@ -1,7 +1,7 @@
 
 package body Svg is
       
-   -- Dessine une ligne A -- B
+   -- Dessine une ligne A -- B sur le fichier SVG
    procedure Svg_Line (A, B : in Position)
    is
    begin
@@ -16,6 +16,23 @@ package body Svg is
       Put (Svg_Out, """ style=""stroke:darkred");
       Put_Line (Svg_Out, ";stroke-width:0.05"" transform=""translate(5,5)""/>");
    end Svg_Line;
+   
+      -- Dessine une ligne A -- B
+   procedure Svg_Line_STDOUT (A, B : in Position)
+   is
+   begin
+      Put ("<line x1=""");
+      Put (A.X);
+      Put (""" y1=""");
+      Put (A.Y);
+      Put (""" x2=""");
+      Put (B.X);
+      Put (""" y2=""");
+      Put (B.Y);
+      New_Line;
+      Put (""" style=""stroke:darkred");
+      Put_Line (";stroke-width:0.05"" />");
+   end Svg_Line_STDOUT;
    
    procedure Svg_Polygon (T : in TSom_Ptr)
    is
@@ -56,13 +73,7 @@ package body Svg is
       
       Svg_Header;            
             
-      -- Tracé du polygone
-      --  for I in T.all'First..(T.all'Last - 1) loop	 
-      --  	 Svg_Line (T(I).Pos, T(I + 1).Pos, Bleu);
-      --  end loop;
       Svg_Polygon (T);
-      
-      --  Svg_Line (T(T.all'Last).Pos, T(T.all'First).Pos, Bleu);                  
    end Trace_Polygone;
    
    procedure Trace_Segments (Segs : in Liste_Segments) is
@@ -71,6 +82,7 @@ package body Svg is
       Seg_Cour := Segs.Tete;
       while Seg_Cour /= null loop
 	 Svg_Line (Seg_Cour.Seg.A.Pos, Seg_Cour.Seg.B.Pos);
+	 Svg_Line_STDOUT (Seg_Cour.Seg.A.Pos, Seg_Cour.Seg.B.Pos);
 	 Seg_Cour := Seg_Cour.Suiv;
       end loop;
       
