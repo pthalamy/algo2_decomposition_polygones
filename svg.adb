@@ -14,7 +14,11 @@ package body Svg is
       Put (Svg_Out, """ y2=""");
       Put (Svg_Out, B.Y);
       Put (Svg_Out, """ style=""stroke:darkred");
-      Put_Line (Svg_Out, ";stroke-width:0.05"" transform=""translate(5,5)""/>");
+      Put (Svg_Out, ";stroke-width:0.05"" ");
+      Put_Line (Svg_Out, "transform=""translate("
+		  & Float'Image(Translation_Offset_X) 
+		  & ',' & Float'Image(Translation_Offset_Y) 
+		  & ")"" />");
    end Svg_Line;
    
       -- Dessine une ligne A -- B
@@ -44,17 +48,20 @@ package body Svg is
 	 Put (Svg_Out, T(I).Pos.Y);
 	 Put (Svg_Out, ' ');
       end loop;
-      Put (Svg_Out, """ style=""fill:lightcyan;stroke:black;stroke-width:0.05""" 
-	     & " transform=""translate(5,5)"" />");
+      Put (Svg_Out, """ style=""fill:lightcyan;stroke:black;stroke-width:0.05"" ");
+      Put_Line (Svg_Out, "transform=""translate("
+		  & Float'Image(Translation_Offset_X) 
+		  & ',' & Float'Image(Translation_Offset_Y)
+		  & ")"" />");
    end Svg_Polygon;
 
    
    procedure Svg_Header is
       begin
          Put (Svg_Out, "<svg width=""");
-         Put (Svg_Out, 10.0);
+         Put (Svg_Out, Margin_Offset * (X_Max - X_Min));
          Put (Svg_Out, """ height=""");
-         Put (Svg_Out, 10.0);
+         Put (Svg_Out, Margin_Offset * (Y_Max - Y_Min));
          Put_Line (Svg_Out, """>");
       end Svg_Header;
       
@@ -71,7 +78,7 @@ package body Svg is
               Mode => Out_File,
               Name => Svg_Out_Str);
       
-      Svg_Header;            
+      Svg_Header;
             
       Svg_Polygon (T);
    end Trace_Polygone;
@@ -80,6 +87,7 @@ package body Svg is
       Seg_Cour : Cell_Ptr;   
    begin
       Seg_Cour := Segs.Tete;
+      
       while Seg_Cour /= null loop
 	 Svg_Line (Seg_Cour.Seg.A.Pos, Seg_Cour.Seg.B.Pos);
 	 Svg_Line_STDOUT (Seg_Cour.Seg.A.Pos, Seg_Cour.Seg.B.Pos);

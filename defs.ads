@@ -4,7 +4,14 @@ use Ada.Text_IO;
 with Generic_ABR;
 
 package Defs is        
-      
+   
+   -- Extrema de coordonnées de sommets
+   X_Max, X_Min : Float;
+   Y_Max, Y_Min : Float;
+   Translation_Offset_X : Float;
+   Translation_Offset_Y : Float;
+   Margin_Offset : constant Float := 1.30;
+   
    -- Liste de segments pour segments voisins et de régularisation
    type Cellule;
    type Cell_Ptr is access Cellule;   
