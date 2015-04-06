@@ -47,6 +47,10 @@
 }
 
 %%%%%%%%%%
+% COMMANDES PERSONNALISEES
+\newcommand{\shellcmd}[1]{\\\indent\indent\texttt{\footnotesize\# #1}\\}
+
+%%%%%%%%%%
 % TAILLE DES PAGES (A4 serré)
 
 \setlength{\parindent}{0pt}
@@ -65,7 +69,7 @@
 \addtolength{\headheight}{1.6pt}
 \addtolength{\headheight}{2.6pt}
 \lfoot{}
-\cfoot{\footnotesize\sf TPL UNIX Avancé 2014}
+\cfoot{\footnotesize\sf TPL Algo2 Decomposition Polygones}
 \rfoot{\footnotesize\sf page~\thepage/\pageref{LastPage}}
 \lhead{}
 
@@ -83,25 +87,112 @@
 \maketitle
 
 \section{Vue d'ensemble du projet}
+\subsection{Compilation et execution}
 Pour commencer, notre programme respecte bien les consignes et le
 cahier des charges décrit dans l'énoncé. De plus, il décompose avec
-succés les polygones décrits par les fichier .in fournis.
+succés les polygones décrits par les fichier \emph{.in} fournis.
 
 Notre executable prend deux arguments :
 \shellcmd{./decomposition\_polynomes data.in output.svg}
 Avec : 
-\begin{listing}
+\begin{itemize}
   \item data.in : Le fichier d'entrée décrivant le polygone à
     monotoniser.
   \item output.svg : Le nom du fichier svg sur lequel sera dessiné le
     polygone + les segments de monotonisation (aussi affichés sur
     Stdout par respect pour l'énoncé).
-\end{listing}
-Après avoir compilé avec :
-\shellcmd{gnatmake noeuds.adb} 
+\end{itemize}
+Après avoir compilé la commande suivante dans le repertorie \emph{Decpoly/} :
+\shellcmd{gnatmake decomposition\_Polynomes.adb}
+
+\subsection{Organisation du code}
+
+Le projet comprend 7 modules :
+\begin{enumerate}
+\item \emph{Decomposition\_Polynomes} : Le main faisant appels aux procédures de tous
+  les autres modules.
+\item \emph{Defs} : Comprend les définitions de tous les objets et
+  structures de données utilisées dans le projet (Arbre exclu), ainsi que diverses
+  procédures de manipulation des types.
+\item \emph{Generic\_ABR} : Un package générique de gestion d'arbres
+  binaires de recherche, tel que décrit dans l'énoncé. 
+\item \emph{Liste} : Liste doublement chainée pour le stockage des
+  segments.
+\item \emph{Parseur} : Procédures d'extraction des données des fichiers
+  d'entrée pour stockage dans les structures appropriées.
+\item \emph{Traitement} : Contient les procédures d'exploitation des
+  données stockées (Génération des segments, tri du
+  tableau par ordre lexicographique, algorithme de traitement des point).
+\item \emph{Svg} : Réalise le du polygone, puis des segments de monotonisation.
+\end{enumerate}
+
+\newpage
+
+\subsection{Exécution séquentielle du programme}
+Nous décrivons ci-dessous les actions exécutées par le programme de
+façon séquentielle, comme il est possible de le voir très facilement
+dans notre fichier \emph{main}.
+
+\begin{enumerate}
+\item \emph{Lecture des données d'entrée} : Via le parseur, on
+  instancie un élément de type sommet pour chaque ligne du fichier
+  d'entrée et on les stocke à la suite dans le tableau de pointeurs sur sommets.
+\item \emph{Initialisation des segments entrants / sortants} : Pour
+  chaque élément du tableau de sommet, on génére les listes de
+  segments entrants et sortants suivant l'ordre lexicographique.
+\item \emph{Dessin du polygone} : On écrit le code du polygone dans le
+  fichier SVG passé en argument.
+\item \emph{Tri du tableau selon l'ordre lexicographique} : On utilise
+  le Generic Array Sort de la bibliothèque Ada pour trier le tableau
+  de sommet selon l'ordre lexicographique.
+\item \emph{Exécution de l'algorithme de décomposition} : Pour chaque
+  point du tableau, on applique l'algorithme de décomposition donné
+  dans le sujet. Les segments de monotonisation générés sont stockés
+  dans une liste.
+\item \emph{Export SVG des segments de monotisation} : On ajoute les
+  segments générés par l'algorithme au fichier SVG et on le ferme.
+\end{enumerate}
 
 \section{Choix de conception}
+\subsection{Modélisation et stockage des sommets}
+Nous avons défini un sommet comme un type comprenant :
+\begin{itemize}
+  \item Une lettre representant le sommet, en fonction de son ordre d'apparition
+    dans le fichier d'entrée. 
+  \item Ses coordonnnées, modélisé par le type Position.
+  \item Deux listes doublement chainées, une pour les segments
+    entrants, et une autre pour les segments sortants.
+\end{itemize}
+C'est vrai qu'il est étrange d'avoir choisi une liste pour stocker un
+nombre fini connu d'éléments, mais comme nous utilisons aussi une liste
+de segments pour stocker les segments de monotonisation, dont le
+nombre est inconnu, autant réutiliser cette structure. \\
+Par ailleurs, dans la quasi intégralité du code, nous manipulons des
+pointeurs sur sommets plutôt que les sommets eux même. Les sommets
+sont stockés et accessibles via un tableau de pointeurs sur sommets,
+et un segment est défini comme un couple de deux pointeurs sur
+sommet. Cela est dû au fait que si nous passions les sommets par copie
+aux différentes procédures, les tests d'égalité entre eux seraient
+impossible, leurs listes de segments changeant sans arrêt. \\
+Enfin, en réalité nous ne manipulons directement le tableau de
+sommets, mais un pointeur sur tableau de sommets dynamique,
+\emph{TSom\_Ptr}, afin de ne pas avoir à se soucier des contraintes
+d'initialisation du tableau dynamique.
 
-\section{Difficultés rencontrées}
+\subsection{Arbre Binaire de Recherche}
+Pour l'arbre binaire de recherche, nous avons suivi globalement suivi
+l'implémentation faite en cours, tout en rajoutant les procédures
+requises par l'énoncé (\emph{Compte\_Position()} et
+\emph{Noeuds\_Voisins()}). De plus, nous proposons une procédure
+d'export au format \emph{.dot} et d'affichage sur stdout de l'arbre.\\
+Notre ABR a été implémenté dans un package générique nécessitant une
+fonction de comparaison pour le \emph{Type\_Clef}, et une fonction
+d'affichage d'un élément de ce type sur stdout (Pour prise en charge
+de l'affichage et export dot). Nous avons testé notre implémentation
+avec des entiers naturels grâce au fichier \emph{test\_abr.adb}. \\
+En ce qui concerne l'implémentation de la fonction \emph{``au dessus
+  de''} pour le type segment, nous avons trouvé que la manière la plus
+simple de comparer l'ordonné de deux segments était de comparer
+l'ordonné de leur milieu.
 
 \end{document}
