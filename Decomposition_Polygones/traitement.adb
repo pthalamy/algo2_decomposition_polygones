@@ -22,7 +22,7 @@ package body Traitement is
 	 if T(I) < T(I + 1) then
 	    Liste.Enqueue (T(I).Sortants, (T(I), T(I+1)));
 	    Liste.Enqueue (T(I+1).Entrants, (T(I), T(I+1)));
-	 else 
+	 else
 	    Liste.Enqueue (T(I).Entrants, (T(I+1), T(I)));
 	    Liste.Enqueue (T(I+1).Sortants, (T(I+1), T(I)));	    
 	 end if;
@@ -142,11 +142,17 @@ package body Traitement is
       	    Insertion (A, S, N );
       	    Noeuds_Voisins (N, V_Petit, V_Grand);
 	    Compte_Position (N, C_Petit, C_Grand);
+	    Affichage(A);
 	    Suppression (A, S);
 	 end if;
 	 
 	 if R then
 	    if ( (C_Petit mod 2) = 1) or ( (C_Grand mod 2 = 1) ) then
+	       Put_Line ("C_Petit = " & Integer'Image(C_Petit));
+	       Put_Line ("C_Grand = " & Integer'Image(C_Grand));
+	       Put("V_Petit = "); Put(V_Petit.C); New_Line;
+	       Put("V_Grand = "); Put(V_Grand.C); New_Line;	       
+	       
 	       if V_Petit /= null then
 		  -- Calcul du point de rencontre avec le segment inf
 		  New_Seg := (T(I), 

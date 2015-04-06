@@ -82,7 +82,23 @@
 
 \maketitle
 
-\section{Compilation et utilisation de l'executable}
+\section{Vue d'ensemble du projet}
+Pour commencer, notre programme respecte bien les consignes et le
+cahier des charges décrit dans l'énoncé. De plus, il décompose avec
+succés les polygones décrits par les fichier .in fournis.
+
+Notre executable prend deux arguments :
+\shellcmd{./decomposition\_polynomes data.in output.svg}
+Avec : 
+\begin{listing}
+  \item data.in : Le fichier d'entrée décrivant le polygone à
+    monotoniser.
+  \item output.svg : Le nom du fichier svg sur lequel sera dessiné le
+    polygone + les segments de monotonisation (aussi affichés sur
+    Stdout par respect pour l'énoncé).
+\end{listing}
+Après avoir compilé avec :
+\shellcmd{gnatmake noeuds.adb} 
 
 \section{Choix de conception}
 
