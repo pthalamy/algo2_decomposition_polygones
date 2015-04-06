@@ -39,19 +39,9 @@ package body Parseur is
 	 end if;
       end loop;
       
-      Put (X_Min);       Put (X_Max); New_Line;
-      Put (Y_Min);       Put (Y_Max); New_Line;
-      
       -- Calcul de l'offset pour un affichage svg centré
-      --  Translation_Offset_X := (abs(X_Min) + abs(X_Max))*Margin_Offset;
-      --  Translation_Offset_Y := (abs(Y_Min) + abs(Y_Max))*Margin_Offset;
-      
       Translation_Offset_X := Margin_Offset + abs(X_Min) ;
-      Translation_Offset_Y := Margin_Offset + abs(Y_Min) ;  
-    
-      
-      Put (Translation_Offset_X);       Put (Translation_Offset_Y); New_Line;
-      
+      Translation_Offset_Y := Margin_Offset + abs(Y_Min) ;            
       
       Close (Fichier_In);
    end Lecture;
