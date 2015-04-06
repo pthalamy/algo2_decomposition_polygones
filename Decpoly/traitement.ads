@@ -19,7 +19,7 @@ package Traitement is
      -- Compare deux éléments du tableau pour son tri croissant
      -- Instanciation du generic array sort de la bibliothèque standard Ada
    function "<" (A, B : Som_Ptr) return Boolean;
-   procedure TriParAbsisseCroissante is 
+   procedure TriLexicographique is 
       new Ada.Containers.Generic_Array_Sort (Index_Type => Natural, 
 					     Element_Type => Som_Ptr, 
 					     Array_Type => Tab_Sommets);

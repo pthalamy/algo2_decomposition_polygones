@@ -21,7 +21,7 @@ begin
    
    Svg.Trace_Polygone (Argument(2), T);
    
-   Traitement.TriParAbsisseCroissante (T.all);
+   Traitement.TriLexicographique (T.all);
    Traitement.Parcours_Sommets (T, Segs);
    
    Svg.Trace_Segments (Segs);
