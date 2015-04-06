@@ -9,6 +9,7 @@
 
 # Executables
 test_abr
+Decomposition_Polygones/decomposition_polygones
 
 # Svg outputs
 out.svg
