@@ -59,11 +59,10 @@ package body Svg is
    procedure Svg_Header is
    begin
       Put (Svg_Out, "<svg width=""");
-      Put (Svg_Out, 2.0 * Margin_Offset + 
-	     Sqrt(X_Max**2 - X_Min**2));
+      Put (Svg_Out, 2.0 * Margin_Offset*(X_Max - X_Min)  + X_Max - X_Min);
       Put (Svg_Out, """ height=""");
-      Put (Svg_Out, 2.0 * Margin_Offset +
-	     Sqrt(Y_Max**2 - Y_Min**2));
+      Put (Svg_Out, 2.0 * Margin_Offset*(Y_Max - Y_Min) +
+	     Y_Max - Y_Min);
       Put_Line (Svg_Out, """>");
    end Svg_Header;
    
