@@ -10,7 +10,7 @@ package Defs is
    Y_Max, Y_Min : Float;
    Translation_Offset_X : Float;
    Translation_Offset_Y : Float;
-   Margin_Offset : constant Float := 1.30;
+   Margin_Offset : constant Float := 0.30;
    
    -- Liste de segments pour segments voisins et de régularisation
    type Cellule;
