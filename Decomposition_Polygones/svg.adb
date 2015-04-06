@@ -1,6 +1,11 @@
-
+with Ada.Numerics.Generic_Elementary_Functions;
 package body Svg is
-      
+   
+   --  function Sqrt (A : in Float) return Float is
+   --  begin
+   --     return Exp(log(A)/2) ;
+   --  end Sqrt ;
+   
    -- Dessine une ligne A -- B sur le fichier SVG
    procedure Svg_Line (A, B : in Position)
    is
@@ -56,12 +61,21 @@ package body Svg is
    end Svg_Polygon;
 
    
-   procedure Svg_Header is
+   --  procedure Svg_Header is
+   --     begin
+   --        Put (Svg_Out, "<svg width=""");
+   --        Put (Svg_Out, 2.0*Margin_Offset + Sqrt((X_Max*X_Max - X_Min*X_Min)));
+   --        Put (Svg_Out, """ height=""");
+   --        Put (Svg_Out, 2.0*Margin_Offset + Sqrt((Y_Max*Y_Max - Y_Min*Y_Min)));
+   --        Put_Line (Svg_Out, """>");
+   --     end Svg_Header;
+   
+      procedure Svg_Header is
       begin
          Put (Svg_Out, "<svg width=""");
-         Put (Svg_Out, Margin_Offset * (X_Max - X_Min));
+         Put (Svg_Out, 2.0*Margin_Offset + (X_Max - X_Min));
          Put (Svg_Out, """ height=""");
-         Put (Svg_Out, Margin_Offset * (Y_Max - Y_Min));
+         Put (Svg_Out, 2.0*Margin_Offset + (Y_Max - Y_Min));
          Put_Line (Svg_Out, """>");
       end Svg_Header;
       
