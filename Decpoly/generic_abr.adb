@@ -150,7 +150,6 @@ package body Generic_ABR is
    -- Affiche le noeud N sur Stdout
    procedure Put (N : Noeud) is
    begin
-      --  Put ("NYI");
       Put (N.C); Put (" (");
       
       --  Affichage du voisinnage       
@@ -303,20 +302,22 @@ package body Generic_ABR is
 	    Nb_Grands := Nb_Grands + 1;
 	    
 	    if (Arbre_Courant.all.Fils(Droite) /= null) then 
-	       Nb_Grands := Nb_Grands + Arbre_Courant.all.Fils(Droite).all.Compte ;
-	    end if ;
+	       Nb_Grands := Nb_Grands + 
+		 Arbre_Courant.all.Fils(Droite).all.Compte;
+	    end if;
 	    
-	 else -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) then -- On ne regarde pas le cas d'égalité
-	    Arbre_Courant := Arbre_Courant.all.Pere ;
-	    Nb_Petits := Nb_Petits + 1 ;
+	 else -- (Arbre_Courant.all.Pere.all.C < Arbre_Courant.all.C) then
+	      -- On ne regarde pas le cas d'égalité
+	    Arbre_Courant := Arbre_Courant.all.Pere;
+	    Nb_Petits := Nb_Petits + 1;
 	    
 	    if (Arbre_Courant.all.Fils(Gauche) /= null) then
 	       Nb_Petits := Nb_Petits + 
-		 Arbre_Courant.all.Fils(Gauche).all.Compte ;
-	    end if ;
+		 Arbre_Courant.all.Fils(Gauche).all.Compte;
+	    end if;
 	    
-	 end if ;
-      end loop ;
-   end Compte_Position ;   
+	 end if;
+      end loop;
+   end Compte_Position;   
    
 end Generic_ABR;
