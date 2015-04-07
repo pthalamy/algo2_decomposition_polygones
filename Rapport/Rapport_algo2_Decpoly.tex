@@ -99,8 +99,7 @@ Avec :
   \item data.in : Le fichier d'entrée décrivant le polygone à
     monotoniser.
   \item output.svg : Le nom du fichier svg sur lequel sera dessiné le
-    polygone + les segments de monotonisation (aussi affichés sur
-    Stdout par respect pour l'énoncé).
+    polygone + les segments de monotonisation.
 \end{itemize}
 Après avoir compilé la commande suivante dans le repertorie \emph{Decpoly/} :
 \shellcmd{gnatmake decomposition\_Polynomes.adb}
@@ -144,13 +143,19 @@ dans notre fichier \emph{main}.
   fichier SVG passé en argument.
 \item \emph{Tri du tableau selon l'ordre lexicographique} : On utilise
   le Generic Array Sort de la bibliothèque Ada pour trier le tableau
-  de sommet selon l'ordre lexicographique.
+  de sommet selon l'ordre lexicographique. On compare l'absisse des
+  sommets, puis leur ordonnée en cas d'égalité.
 \item \emph{Exécution de l'algorithme de décomposition} : Pour chaque
   point du tableau, on applique l'algorithme de décomposition donné
   dans le sujet. Les segments de monotonisation générés sont stockés
   dans une liste.
 \item \emph{Export SVG des segments de monotisation} : On ajoute les
   segments générés par l'algorithme au fichier SVG et on le ferme.
+\item \emph{Liberation des objets alloués sur le tas} : Liberation des
+  sommets de connexions aux segments de monotonisation, de ces
+  derniers eux-mêmes, des sommets de leurs segments, et enfin du
+  tableau de sommet. \textbf{Le code ne lève aucune erreur valgrind ou
+    n'annonce de pertes mémoires.}
 \end{enumerate}
 
 \section{Choix de conception}
