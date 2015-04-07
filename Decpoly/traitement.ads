@@ -31,8 +31,9 @@ package Traitement is
                               Segs : in out Liste_Segments);
 
    -- Libere tous les sommets et le tableau
-   -- Garantit : T := null
-   procedure Liberer(T : in out TSom_Ptr);
+   -- Garantit : T := null et Segs := null
+   procedure Liberer_all(T : in out TSom_Ptr;
+			 Segs : in out Liste_Segments);
 
 private
    -- Etant donné un point P et un segment S, calcule et retourne le point

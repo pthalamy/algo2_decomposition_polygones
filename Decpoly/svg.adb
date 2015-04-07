@@ -31,7 +31,7 @@ package body Svg is
          Put (Svg_Out, T(I).Pos.Y);
          Put (Svg_Out, ' ');
       end loop;
-      Put (Svg_Out, """ style=""fill:lightcyan;stroke:black;stroke-width:0.05"" ");
+      Put (Svg_Out, """ style=""fill:lightcyan;stroke:black;stroke-width:0.01"" ");
       Put_Line (Svg_Out, "transform=""translate("
                   & Float'Image(Translation_Offset_X)
                   & ',' & Float'Image(Translation_Offset_Y)

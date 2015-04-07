@@ -31,8 +31,7 @@ begin
    Put_Line ("    Ouvrez " & Argument(2)
                & " pour observer le résultat.");
 
-   Liste.Liberer (Segs);
-   Traitement.Liberer (T);
+   Traitement.Liberer_All (T, Segs);
 
 exception
    when Args_Invalides =>

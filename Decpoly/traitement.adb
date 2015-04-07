@@ -163,8 +163,8 @@ package body Traitement is
                end if;
                if V_Grand /= null then
                   -- Calcul du point de rencontre avec le segment sup
-                  New_Seg := (Point_De_Connexion (T(I).Pos, V_Grand.C),
-                              T(I));
+                  New_Seg := (T(I),
+			      Point_De_Connexion (T(I).Pos, V_Grand.C));
                   Put ("Tracé du segment : [" & T(I).Nom & ", "
                               & V_Grand.C.A.Nom & V_Grand.C.B.Nom & ']');
                   Put_Line (" -> [" & Point2Str(New_Seg.A.Pos)
@@ -176,17 +176,32 @@ package body Traitement is
       end loop;
    end Parcours_Sommets;
 
-   procedure Liberer(T : in out TSom_Ptr) is
+   procedure Liberer_All(T : in out TSom_Ptr;
+			 Segs : in out Liste_Segments) is
+      
+      Cour : Cell_Ptr := Segs.Tete;
    begin
-      for I in T'Range loop
+      -- Liberation des sommets de connexion
+      while Cour /= null loop
+	 Free_Sommet(Cour.Seg.B);
+	 Cour.Seg.B := null;
+	 
+	 Cour := Cour.Suiv;
+      end loop;	
+      
+      -- Liberation des sommets et leurs segments
+      for I in T'Range loop	 
          Liste.Liberer(T(I).Entrants);
          Liste.Liberer(T(I).Sortants);
          Free_Sommet (T(I));
       end loop;
-
+      
+      -- Liberation des segments de monotonisation
+      Liste.Liberer (Segs);
+      
       Free_Tab(T);
-
+      
       T := null;
-   end Liberer;
+   end Liberer_All;
 
 end Traitement;
