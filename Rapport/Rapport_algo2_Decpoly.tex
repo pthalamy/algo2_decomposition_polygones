@@ -10,7 +10,7 @@
 \usepackage{fullpage}
 \usepackage{url}
 \usepackage{xspace}
- 
+
 \usepackage{listings}
 \lstset{
   morekeywords={abort,abs,accept,access,all,and,array,at,begin,body,
@@ -32,13 +32,13 @@
   columns=[c]fixed
 }
 
-% CI-DESSOUS: conversion des caractères accentués UTF-8 
+% CI-DESSOUS: conversion des caractères accentués UTF-8
 % en caractères TeX dans les listings...
 \lstset{
   literate=%
   {À}{{\`A}}1 {Â}{{\^A}}1 {Ç}{{\c{C}}}1%
   {à}{{\`a}}1 {â}{{\^a}}1 {ç}{{\c{c}}}1%
-  {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1 {Ë}{{\"E}}1% 
+  {É}{{\'E}}1 {È}{{\`E}}1 {Ê}{{\^E}}1 {Ë}{{\"E}}1%
   {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {ë}{{\"e}}1%
   {Ï}{{\"I}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1%
   {ï}{{\"i}}1 {î}{{\^i}}1 {ô}{{\^o}}1%
@@ -89,40 +89,42 @@
 \section{Vue d'ensemble du projet}
 \subsection{Compilation et execution}
 Pour commencer, notre programme respecte bien les consignes et le
-cahier des charges décrit dans l'énoncé. De plus, il décompose avec
+cahier des charges décrit dans l'énoncé, dont la compléxité des deux
+procédures \emph{Compte\_Position} et \emph{Noeuds\_Voisins}. \\
+De plus, il décompose avec
 succés les polygones décrits par les fichier \emph{.in} fournis.
 
 Notre executable prend deux arguments :
 \shellcmd{./decomposition\_polynomes data.in output.svg}
-Avec : 
+Avec :
 \begin{itemize}
   \item data.in : Le fichier d'entrée décrivant le polygone à
     monotoniser.
   \item output.svg : Le nom du fichier svg sur lequel sera dessiné le
     polygone + les segments de monotonisation.
 \end{itemize}
-Après avoir compilé la commande suivante dans le repertorie \emph{Decpoly/} :
+Après avoir compilé grâce à la commande suivante dans le repertoire \emph{Decpoly/} :
 \shellcmd{gnatmake decomposition\_Polynomes.adb}
 
 \subsection{Organisation du code}
 
 Le projet comprend 7 modules :
 \begin{enumerate}
-\item \emph{Decomposition\_Polynomes} : Le main faisant appels aux procédures de tous
+\item \emph{Decomposition\_Polynomes} : Le main faisant appel aux procédures de tous
   les autres modules.
 \item \emph{Defs} : Comprend les définitions de tous les objets et
-  structures de données utilisées dans le projet (Arbre exclu), ainsi que diverses
+  structures de données utilisés dans le projet (Arbre exclu), ainsi que diverses
   procédures de manipulation des types.
 \item \emph{Generic\_ABR} : Un package générique de gestion d'arbres
-  binaires de recherche, tel que décrit dans l'énoncé. 
+  binaires de recherche, tel que décrit dans l'énoncé.
 \item \emph{Liste} : Liste doublement chainée pour le stockage des
   segments.
 \item \emph{Parseur} : Procédures d'extraction des données des fichiers
   d'entrée pour stockage dans les structures appropriées.
 \item \emph{Traitement} : Contient les procédures d'exploitation des
   données stockées (Génération des segments, tri du
-  tableau par ordre lexicographique, algorithme de traitement des point).
-\item \emph{Svg} : Réalise le du polygone, puis des segments de monotonisation.
+  tableau par ordre lexicographique, algorithme de traitement des points).
+\item \emph{Svg} : Réalise le tracé du polygone, puis des segments de monotonisation.
 \end{enumerate}
 
 \newpage
@@ -152,7 +154,7 @@ dans notre fichier \emph{main}.
 \item \emph{Export SVG des segments de monotisation} : On ajoute les
   segments générés par l'algorithme au fichier SVG et on le ferme.
 \item \emph{Liberation des objets alloués sur le tas} : Liberation des
-  sommets de connexions aux segments de monotonisation, de ces
+  sommets de connexion aux segments de monotonisation, de ces
   derniers eux-mêmes, des sommets de leurs segments, et enfin du
   tableau de sommet. \textbf{Le code ne lève aucune erreur valgrind ou
     n'annonce de pertes mémoires.}
@@ -163,8 +165,8 @@ dans notre fichier \emph{main}.
 Nous avons défini un sommet comme un type comprenant :
 \begin{itemize}
   \item Une lettre representant le sommet, en fonction de son ordre d'apparition
-    dans le fichier d'entrée. 
-  \item Ses coordonnnées, modélisé par le type Position.
+    dans le fichier d'entrée.
+  \item Ses coordonnnées, modélisées par le type Position.
   \item Deux listes doublement chainées, une pour les segments
     entrants, et une autre pour les segments sortants.
 \end{itemize}
@@ -172,8 +174,8 @@ C'est vrai qu'il est étrange d'avoir choisi une liste pour stocker un
 nombre fini connu d'éléments, mais comme nous utilisons aussi une liste
 de segments pour stocker les segments de monotonisation, dont le
 nombre est inconnu, autant réutiliser cette structure. \\
-Par ailleurs, dans la quasi intégralité du code, nous manipulons des
-pointeurs sur sommets plutôt que les sommets eux même. Les sommets
+Par ailleurs, dans la quasi-intégralité du code, nous manipulons des
+pointeurs sur sommets plutôt que les sommets eux-même. Les sommets
 sont stockés et accessibles via un tableau de pointeurs sur sommets,
 et un segment est défini comme un couple de deux pointeurs sur
 sommet. Cela est dû au fait que si nous passions les sommets par copie
@@ -185,7 +187,7 @@ sommets, mais un pointeur sur tableau de sommets dynamique,
 d'initialisation du tableau dynamique.
 
 \subsection{Arbre Binaire de Recherche}
-Pour l'arbre binaire de recherche, nous avons suivi globalement suivi
+Pour l'arbre binaire de recherche, nous avons globalement suivi
 l'implémentation faite en cours, tout en rajoutant les procédures
 requises par l'énoncé (\emph{Compte\_Position()} et
 \emph{Noeuds\_Voisins()}). De plus, nous proposons une procédure
@@ -197,7 +199,7 @@ de l'affichage et export dot). Nous avons testé notre implémentation
 avec des entiers naturels grâce au fichier \emph{test\_abr.adb}. \\
 En ce qui concerne l'implémentation de la fonction \emph{``au dessus
   de''} pour le type segment, nous avons trouvé que la manière la plus
-simple de comparer l'ordonné de deux segments était de comparer
-l'ordonné de leur milieu.
+simple de comparer l'ordonnée de deux segments était de comparer
+l'ordonnée de leur milieu.
 
 \end{document}
