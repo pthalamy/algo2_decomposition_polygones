@@ -1,6 +1,6 @@
 
 package body Parseur is
-      
+
    procedure Lecture (Fichier_In_Str : in String;
 		      T : out TSom_Ptr)
    is
@@ -11,16 +11,16 @@ package body Parseur is
       X_Min := Float'Last;
       Y_Max := Float'First;
       Y_Min := Float'Last;
-      
+
       Open (File => Fichier_In,
             Mode => In_File,
             Name => Fichier_In_Str);
-      
+
       -- Lecture du nombre de sommets
       Get (Fichier_In, Nb_Sommets);
-      
+
       T := new Tab_Sommets(1..Nb_Sommets);
-      
+
       -- Lecture des coordonnées des sommets
       for I in T.all'range loop
 	 T.all(I) := new Sommet;
@@ -30,7 +30,7 @@ package body Parseur is
 	 elsif T.all(I).Pos.X > X_Max then
 	    X_Max := T.all(I).Pos.X;
 	 end if;
-	 
+
 	 Get (Fichier_In, T.all(I).Pos.Y);
 	 if T.all(I).Pos.Y < Y_Min then
 	    Y_Min := T.all(I).Pos.Y;
@@ -38,13 +38,11 @@ package body Parseur is
 	    Y_Max := T.all(I).Pos.Y;
 	 end if;
       end loop;
-      
+
       -- Calcul de l'offset pour un affichage svg centré
       Translation_Offset_X := Margin_Offset*(X_Max - X_Min) - X_Min ;
-      Translation_Offset_Y := Margin_Offset*(Y_Max - Y_Min) - Y_Min ;  
-      --  Translation_Offset_X := 0.0 ;
-      --  Translation_Offset_Y := 0.0 ;      
-      
+      Translation_Offset_Y := Margin_Offset*(Y_Max - Y_Min) - Y_Min ;
+
       Close (Fichier_In);
    end Lecture;
 

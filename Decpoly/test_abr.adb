@@ -27,7 +27,6 @@ begin
       A : Arbre := null;
       R : Arbre;
       N : Arbre;
-      TROUVE : Boolean;
 
       Vinf, VSup : Natural;
 
@@ -44,9 +43,6 @@ begin
       end loop;
 
       Affichage (A);
-
-      --  Put_Line ("Nombre à rechercher :");
-      --  Get (Integer(ClefAR));
 
       for I in Elements'Range loop
       	 New_Line;
@@ -75,38 +71,16 @@ begin
 
       end loop;
 
-      --  Put_Line ("Nombre à rechercher :");
-      --  Get (Integer(R));
+      --  Test Suppr :
 
-      --  if Recherche (A, R, Found) then
-      --  	 Put_Line ("Trouvé");
-      --  else
-      --  	 Put_Line ("Introuvable");
-      --  end if;
+      for I in Elements'Range loop
+      	 New_Line;
+      	 Put_Line ("Suppression de : "
+      		     & Integer'Image(Elements(I)));
 
-      --  Put_Line ("Suppression de " & Integer'Image(Integer(R)));
-      --  Suppression (A, R);
-      --  Affichage (A);
+      	 Suppression (A, Elements(I));
+      	 Affichage(A);
 
-      --  if Recherche (A, R, Found) then
-      --  	 Put_Line ("Trouvé");
-      --  else
-      --  	 Put_Line ("Introuvable");
-      --  end if;
-
-
-
-
-      -- Test Suppr :
-
-      --  for I in Elements'Range loop
-      --  	 New_Line;
-      --  	 Put_Line ("Suppression de : "
-      --  		     & Integer'Image(Elements(I)));
-
-      --  	 Suppression (A, Elements(I));
-      --  	 Affichage(A);
-
-      --  end loop;
+      end loop;
    end ;
 end Test_ABR;
